@@ -108,6 +108,12 @@
   }
 }
 
+@media only screen and (min-width: 600px) {
+  .prompt-toast {
+    justify-content: right;
+  }
+}
+
 .clear-context {
   margin: 20px 0 0 0;
   padding: 4px 0;

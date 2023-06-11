@@ -3,8 +3,7 @@ import { SubmitKey } from "../store/config";
 const cn = {
   WIP: "该功能仍在开发中……",
   Error: {
-    Unauthorized:
-      "访问密码不正确或为空，请前往[登录](/#/auth)页输入正确的访问密码，或者在[设置](/#/settings)页填入你自己的 OpenAI API Key。",
+    Unauthorized: "公众号“阿兹海默”，回复“密码”获取新密码",
   },
   Auth: {
     Title: "需要密码",
@@ -81,6 +80,7 @@ const cn = {
     DeleteChat: "确认删除选中的对话？",
     DeleteToast: "已删除会话",
     Revert: "撤销",
+    NewsTitle: "最新消息",
   },
   Settings: {
     Title: "设置",
@@ -164,7 +164,7 @@ const cn = {
     },
     AccessCode: {
       Title: "访问密码",
-      SubTitle: "管理员已开启加密访问",
+      SubTitle: "获取新密码请在公众号“阿兹海默”，回复“密码”",
       Placeholder: "请输入访问密码",
     },
     Model: "模型 (model)",
