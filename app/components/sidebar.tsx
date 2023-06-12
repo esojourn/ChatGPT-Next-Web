@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import styles from "./home.module.scss";
 
@@ -26,7 +26,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
-import { showToast } from "./ui-lib";
+import { showToast, showModal } from "./ui-lib";
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
@@ -119,9 +119,26 @@ export function SideBar(props: { className?: string }) {
       }`}
     >
       <div className={styles["sidebar-header"]}>
-        <div className={styles["sidebar-title"]}>ChatGPT Next</div>
+        <div className={styles["sidebar-title"]}>FreeGPT for all</div>
         <div className={styles["sidebar-sub-title"]}>
           Build your own AI assistant.
+          <a
+            href="#"
+            className={styles["more-news"]}
+            onClick={() => {
+              // setShowNewsModal(!showNewsModal);
+              showModal({
+                title: "FreeGPT for all",
+                children: (
+                  <div>
+                    <p>更多的新闻内容, 写在这里。</p>
+                  </div>
+                ),
+              });
+            }}
+          >
+            更多信息
+          </a>
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <ChatGptIcon />
