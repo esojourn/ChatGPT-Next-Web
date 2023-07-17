@@ -121,7 +121,7 @@ export function SideBar(props: { className?: string }) {
       <div className={styles["sidebar-header"]}>
         <div className={styles["sidebar-title"]}>FreeGPT for all</div>
         <div className={styles["sidebar-sub-title"]}>
-          新闻：07/17更新
+          新闻：07/17更新。好消息，可以支持GPT 4了！🎈🎉🎊
           <a
             href="#"
             className={styles["more-news"]}
@@ -132,7 +132,8 @@ export function SideBar(props: { className?: string }) {
                 children: (
                   <div>
                     <p>7/17</p>
-                    <p>似乎找到一个比之前更廉价、灵活、而且稳定的使用GPT 4的渠道。😊😊</p>
+                    <p>找到一个比之前更廉价、灵活、而且稳定的GPT 4的渠道。🎈🎉🎊<br />
+                    详询微信：alzheimer-ai</p>
                     <hr />
                     <p>7/12</p>
                     <p>从7月4号官方新一轮风控，尝试了很多新的渠道。大部分都只能存活几小时，就又被封掉了。这周有了新的解决方案，成本也比之前急剧上涨。从后台看，项目的使用人数不少。建议经常使用，又有些余力的朋友，考虑每月固定打赏个几块钱。能有一定比例的固定打赏，是这个平台能持续下去先决条件。打赏金额，至少80%会投入API购买。</p>
