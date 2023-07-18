@@ -690,7 +690,7 @@ export function Chat() {
           </div>
         </div>
         <div className="qrcode-wrapper">
-          <img src={qrcode.src} />
+        <img src={wxcode.src} /> <img src={qrcode.src} />
           关注公众号“阿兹海默”，获取密码更新
         </div>
         <div className="window-actions">
