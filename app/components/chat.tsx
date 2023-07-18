@@ -23,6 +23,7 @@ import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 
 import qrcode from "../images/qrcode128.png";
+import wxcode from "../images/wxcode.png";
 import donateCode1 from "../images/code1.png";
 import donateCode2 from "../images/code2.png";
 
