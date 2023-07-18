@@ -10,7 +10,7 @@ import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
 import MaskIcon from "../icons/mask.svg";
 import PluginIcon from "../icons/plugin.svg";
-
+import wxcode from "../images/wxcode.png";
 import Locale from "../locales";
 
 import { useAppConfig, useChatStore } from "../store";
@@ -134,8 +134,8 @@ export function SideBar(props: { className?: string }) {
                   <div>
                     <p>7/18</p>
                     <p>支持GPT 4灵活购买，15元起。收入80%继续投入免费站运营<br />
-                    详询微信：alzheimer-ai<img src={wxcode.src} /></p><hr />
-                    
+                    详询微信：alzheimer-ai<img src={wxcode.src} /></p>
+                    <hr />
                     <p>7/17</p>
                     <p>找到一个比之前更廉价、灵活、而且稳定的GPT 4的渠道。🎈🎉🎊</p>
                     <hr />

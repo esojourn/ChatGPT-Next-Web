@@ -23,7 +23,6 @@ import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 
 import qrcode from "../images/qrcode128.png";
-import wxcode from "../images/wxcode.png";
 import donateCode1 from "../images/code1.png";
 import donateCode2 from "../images/code2.png";
 
@@ -690,7 +689,7 @@ export function Chat() {
           </div>
         </div>
         <div className="qrcode-wrapper">
-        <img src={wxcode.src} /> <img src={qrcode.src} />
+        <img src={qrcode.src} />
           关注公众号“阿兹海默”，获取密码更新
         </div>
         <div className="window-actions">
