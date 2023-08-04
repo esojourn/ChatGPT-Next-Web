@@ -122,7 +122,7 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-title"]}>FreeGPT for all</div>
         <div className={styles["sidebar-sub-title"]}>          
           新闻：<br />
-          07/22：当前因打赏款项耗尽，免费站暂停中。付费用户可使用GPT4，15元起。<br />
+          08/04：本月起3.5免费站恢复运行，详见公众号后台。付费用户可使用GPT4，15元。<br />
           <a
             href="#"
             className={styles["more-news"]}
@@ -132,11 +132,15 @@ export function SideBar(props: { className?: string }) {
                 title: "FreeGPT for all",
                 children: (
                   <div>
+                    <p>08/04</p>
+                    <p>本月初免费站恢复试运行，看看新买的key能存活多久。<br /><br />
+                    如需独享付费账号请私信。GPT 4账号，15元起<br /><br />
+                    微信ID：alzheimer-ai<br /><img src={wxcode.src} /></p></p>
+                    <hr />
                     <p>7/22</p>
                     <p>当前因打赏款项耗尽，免费站暂停。7月1日 - 21日 有打赏过的朋友请私信联系。<br />
                     无论金额多少，赠送3.5免费账号一枚<br /><br />
-                    如需独享付费账号请私信。GPT 4账号，15元起<br /><br />
-                    微信ID：alzheimer-ai<br /><img src={wxcode.src} /></p>
+                    
                     <hr />
                     <p>7/18</p>
                     <p>支持GPT 4灵活购买，15元起。收入80%继续投入免费站运营<br />
