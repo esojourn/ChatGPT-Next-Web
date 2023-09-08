@@ -35,6 +35,10 @@ import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
 
+import qrcode from "../images/qrcode128.png";
+import donateCode1 from "../images/code1.png";
+import donateCode2 from "../images/code2.png";
+
 import {
   ChatMessage,
   SubmitKey,
@@ -1059,6 +1063,10 @@ function _Chat() {
             {Locale.Chat.SubTitle(session.messages.length)}
           </div>
         </div>
+        <div className="qrcode-wrapper">
+        <img src={qrcode.src} />
+          关注公众号“阿兹海默”，获取密码更新
+        </div>
         <div className="window-actions">
           {!isMobileScreen && (
             <div className="window-action-button">
@@ -1111,6 +1119,30 @@ function _Chat() {
           setAutoScroll(false);
         }}
       >
+        <div className={styles["donate-wrapper"]}>
+          <div className={styles["donate-description"]}>
+            您可以免费使用本项目。我们持续负担ChatGPT的API成本。如有余力，感谢每月打赏支持。
+            <button
+              className={styles["donate-button"]}
+              type="button"
+              onClick={() => {
+                setShowDonateImage(!showDonateImage);
+              }}
+            >
+              打赏
+            </button>
+          </div>
+          <div
+            className={styles["donate-code-images"]}
+            style={{ display: showDonateImage ? "block" : "none" }}
+          >
+            <img src={donateCode1.src} alt="微信打赏" />
+            <img src={donateCode2.src} alt="支付宝打赏" />
+          </div>
+          <div className={styles["donate-description"]}>
+            地址可能被迫变更，关注公众号“阿兹海默”防失联
+          </div>
+        </div>
         {messages.map((message, i) => {
           const isUser = message.role === "user";
           const isContext = i < context.length;

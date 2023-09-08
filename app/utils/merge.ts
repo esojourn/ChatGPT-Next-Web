@@ -10,4 +10,5 @@ export function merge(target: any, source: any) {
     }
     target[key] = source[key];
   });
+  });
 } 
