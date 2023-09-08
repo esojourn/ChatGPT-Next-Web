@@ -76,6 +76,7 @@ import {
   showConfirm,
   showPrompt,
   showToast,
+  showModal,
 } from "./ui-lib";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -652,6 +653,8 @@ function _Chat() {
     },
   );
 
+  const [showDonateImage, setShowDonateImage] = useState(false);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(measure, [userInput]);
 
@@ -1064,7 +1067,7 @@ function _Chat() {
           </div>
         </div>
         <div className="qrcode-wrapper">
-        <img src={qrcode.src} />
+          <img src={qrcode.src} />
           关注公众号“阿兹海默”，获取密码更新
         </div>
         <div className="window-actions">
