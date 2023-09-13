@@ -122,10 +122,10 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />
-          08/04：本月起3.5免费站恢复运行，详见公众号后台。付费用户可使用GPT4，15元。
+          09/13：3.5免费站暂停一下，成本上升，刷的人太多撑不住。预计1-2天恢复。付费用户不受影响。GPT4，15元。
           <br />
           <br />
-          付费用于请转至g51。详细信息微信联系。
+          付费用户请转至g51。详细信息微信联系。
           <br />
           <a
             href="#"
