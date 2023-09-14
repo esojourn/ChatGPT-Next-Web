@@ -122,10 +122,8 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />
-          09/13：3.5免费站暂停一下，成本上升，刷的人太多撑不住。预计1-2天恢复。付费用户不受影响。GPT4，15元。
+          09/13：免费站已经恢复。付费GPT4，15元。
           <br />
-          <br />
-          付费用户请转至g51。详细信息微信联系。
           <br />
           <a
             href="#"
@@ -136,9 +134,9 @@ export function SideBar(props: { className?: string }) {
                 title: "FreeGPT for all",
                 children: (
                   <div>
-                    <p>08/04</p>
+                    <p>09/13</p>
                     <p>
-                      本月初免费站恢复试运行，看看新买的key能存活多久。
+                    3.5免费站暂停一下，成本上升，刷的人太多撑不住。预计1-2天恢复。付费用户不受影响。
                       <br />
                       <br />
                       如需独享付费账号请私信。GPT 4账号，15元起
@@ -147,6 +145,14 @@ export function SideBar(props: { className?: string }) {
                       微信ID：alzheimer-ai
                       <br />
                       <img src={wxcode.src} />
+                    </p>
+                    <hr />
+                    <p>08/04</p>
+                    <p>
+                      本月初免费站恢复试运行，看看新买的key能存活多久。
+                      <br />
+                      <br />
+                      如需独享付费账号请私信。GPT 4账号，15元起
                     </p>
                     <hr />
                     <p>7/22</p>
