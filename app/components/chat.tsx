@@ -1175,6 +1175,12 @@ function _Chat() {
               <br />
               <img src={qrcode.src} alt="" width="100px" />
             </p>
+
+            <p>
+              <i>
+                ** 付费用户不用担心，除非遇到不可抗力。我会负责支持维护到底。
+              </i>
+            </p>
           </div>
         </div>
         {messages.map((message, i) => {
