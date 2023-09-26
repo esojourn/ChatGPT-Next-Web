@@ -122,7 +122,7 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />
-          09/25：免费站流量太大，暂停一两天控制成本。付费GPT4，15元。
+          09/26：免费站开放最后几天。献礼国庆，十一之后关闭。
           <br />
           <br />
           <a
