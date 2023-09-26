@@ -121,7 +121,7 @@ export function SideBar(props: { className?: string }) {
       }`}
     >
       <div className={styles["sidebar-header"]}>
-        <div className={styles["sidebar-title"]}>FreeGPT for all</div>
+        <div className={styles["sidebar-title"]}>阿兹海默GPT</div>
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />

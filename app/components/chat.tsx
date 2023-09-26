@@ -689,8 +689,7 @@ export function Chat() {
           </div>
         </div>
         <div className="qrcode-wrapper">
-        <img src={qrcode.src} />
-          关注公众号“阿兹海默”，获取密码更新
+          <img src={qrcode.src} />
         </div>
         <div className="window-actions">
           <div className={"window-action-button" + " " + styles.mobile}>
@@ -752,25 +751,6 @@ export function Chat() {
         }}
       >
         <div className={styles["donate-wrapper"]}>
-          <div className={styles["donate-description"]}>
-            您可以免费使用本项目。我们持续负担ChatGPT的API成本。如有余力，感谢每月打赏支持。
-            <button
-              className={styles["donate-button"]}
-              type="button"
-              onClick={() => {
-                setShowDonateImage(!showDonateImage);
-              }}
-            >
-              打赏
-            </button>
-          </div>
-          <div
-            className={styles["donate-code-images"]}
-            style={{ display: showDonateImage ? "block" : "none" }}
-          >
-            <img src={donateCode1.src} alt="微信打赏" />
-            <img src={donateCode2.src} alt="支付宝打赏" />
-          </div>
           <div className={styles["donate-description"]}>
             地址可能被迫变更，关注公众号“阿兹海默”防失联
           </div>
