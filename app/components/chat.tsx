@@ -38,6 +38,7 @@ import RobotIcon from "../icons/robot.svg";
 import qrcode from "../images/qrcode128.png";
 import donateCode1 from "../images/code1.png";
 import donateCode2 from "../images/code2.png";
+import chat1 from "../images/chat.jpg";
 
 import {
   ChatMessage,
@@ -889,27 +890,27 @@ function _Chat() {
       .concat(
         isLoading
           ? [
-              {
-                ...createMessage({
-                  role: "assistant",
-                  content: "……",
-                }),
-                preview: true,
-              },
-            ]
+            {
+              ...createMessage({
+                role: "assistant",
+                content: "……",
+              }),
+              preview: true,
+            },
+          ]
           : [],
       )
       .concat(
         userInput.length > 0 && config.sendPreviewBubble
           ? [
-              {
-                ...createMessage({
-                  role: "user",
-                  content: userInput,
-                }),
-                preview: true,
-              },
-            ]
+            {
+              ...createMessage({
+                role: "user",
+                content: userInput,
+              }),
+              preview: true,
+            },
+          ]
           : [],
       );
   }, [
@@ -1002,7 +1003,7 @@ function _Chat() {
         if (payload.key || payload.url) {
           showConfirm(
             Locale.URLCommand.Settings +
-              `\n${JSON.stringify(payload, null, 4)}`,
+            `\n${JSON.stringify(payload, null, 4)}`,
           ).then((res) => {
             if (!res) return;
             if (payload.key) {
@@ -1066,10 +1067,7 @@ function _Chat() {
             {Locale.Chat.SubTitle(session.messages.length)}
           </div>
         </div>
-        <div className="qrcode-wrapper">
-          <img src={qrcode.src} />
-          关注公众号“阿兹海默”，获取密码更新
-        </div>
+
         <div className="window-actions">
           {!isMobileScreen && (
             <div className="window-action-button">
@@ -1124,27 +1122,31 @@ function _Chat() {
       >
         <div className={styles["donate-wrapper"]}>
           <div className={styles["donate-description"]}>
-            您可以免费使用本项目。我们持续负担ChatGPT的API成本。如有余力，感谢每月打赏支持。
-            <button
-              className={styles["donate-button"]}
-              type="button"
-              onClick={() => {
-                setShowDonateImage(!showDonateImage);
-              }}
-            >
-              打赏
-            </button>
-          </div>
-          <div
-            className={styles["donate-code-images"]}
-            style={{ display: showDonateImage ? "block" : "none" }}
-          >
-            <img src={donateCode1.src} alt="微信打赏" />
-            <img src={donateCode2.src} alt="支付宝打赏" />
-          </div>
-          <div className={styles["donate-description"]}>
-            地址可能被迫变更，关注公众号“阿兹海默”防失联
-          </div>
+            <h1>通知</h1>
+
+            免费站最后开放几天，十一之后准备关了。献礼国庆。
+
+            以前看动物世界，羚羊敢于在狮子旁边漫步。旁白解释说，这是因为它们知道这时候狮子已经吃饱了。
+
+            最近发生了两件事，不太傻的羚羊应该警觉。毕竟上有老下有小，浑身软肋，需要每天自我审查一下。一件事离我比较远，菜农卖了10几块蔬菜，被指农药超标，罚款几万。另一件事河北程序员使用GitHub和zoom工作，被认定所有收入违法，罚款100万。
+
+            过去20年，狮子是饱的。最近两三年，狮子饿了。一直觉得大城市的底线和宽容度高一些，但是第二件事离我很近。我需要坦白，我的职业技能全部都是来自于google里查到的知识。毕竟学校讲授的内容太过时。外面在用oracle的时候，学校里只讲foxbase。很多实用的技术，我在学校里连名字都没有听过。这样看来，脑子里的知识来源已经违法了。不知道会不会枪毙。
+
+            <h1>初衷</h1>
+
+            做免费站的想法，来源于ChatGPT横空出世时的惊艳。如同20多年前，从DOS命令行时代，看到Photoshop里那只翠绿红眼的青蛙图片。所有人都知道，又一项改变未来，也会影响很多人就业的技术革新出现了。地球上，大部分的人都可以免费使用。但有极少数地方的人，需要大量技能，才能有这个机会。我希望能分享这样的机会，不成为少数人的特权，也希望借这个热度尝试一下自媒体运营。
+
+            开始给自己定了一个小目标，公众号关注1000人就不做了。没想到在风口，这个目标太小了，瞬间达成。在我犹豫关闭时，一位学生朋友的打赏，让我决心继续走下去。
+
+            <img src={chat1.src} alt="" />
+
+            <h1>结语</h1>
+
+            我知道用户里有不少大学生。当年美国恶法《禁酒令》实行的时候，酒精饮料从来没有消亡，我这小破站关闭之后，相信你们不难找到其他替代。
+
+            还有一些老骨灰的繁絮唠叨：在AI造成变革的时代中，保持对新事物的兴趣，对抗自己的惰性，多读一些好书，学好英文。再会！
+            
+
         </div>
         {messages.map((message, i) => {
           const isUser = message.role === "user";
