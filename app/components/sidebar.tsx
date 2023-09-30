@@ -125,7 +125,7 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />
-          09/26：免费站即将关闭。GPT 4付费用户使用不受影响。
+          09/30: 今日起免费站关闭。付费用户我会持续维护。同时付费用户扣费倍率下调。目前相关于官方的90%。
           <br />
           <br />
           <a
@@ -137,6 +137,11 @@ export function SideBar(props: { className?: string }) {
                 title: "GPT for all",
                 children: (
                   <div>
+                    <p>09/30</p>
+                    <p>扣费倍率下调，目前相关于官方的90%</p>
+                    <p>费率如有变化，我会随时在公告里注明。</p>
+                    <hr />
+                    
                     <p>09/26</p>
 
                     <h1>通知</h1>
