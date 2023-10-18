@@ -124,7 +124,7 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />
-          同时付费用户扣费倍率下调。目前相关于官方的90%。
+          付费用户扣费倍率下调。目前费率相当于官方的90%。
           <br />
           <br />
           <a
