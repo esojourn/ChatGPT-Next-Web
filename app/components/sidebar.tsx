@@ -126,10 +126,11 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />
+          10/26: 新开通Midjourney，直连。多人拼车不限量 / 独享每月200张 /
+          独享不限量。
+          <br />
           09/30:
           今日起免费站关闭。付费用户我会持续维护。同时付费用户扣费倍率下调。目前相关于官方的90%。
-          <br />
-          新开通Midjourney，直连。多人拼车不限量 / 独享每月200张 / 独享不限量。
           <br />
           <br />
           <a
