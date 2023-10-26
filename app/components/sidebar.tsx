@@ -11,6 +11,7 @@ import CloseIcon from "../icons/close.svg";
 import MaskIcon from "../icons/mask.svg";
 import PluginIcon from "../icons/plugin.svg";
 import wxcode from "../images/wxcode.png";
+import mjsample from "../images/mjsample.png";
 import chat from "../images/chat.jpg";
 import qrcode from "../images/qrcode128.png";
 import Locale from "../locales";
@@ -125,7 +126,10 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />
-          09/30: 今日起免费站关闭。付费用户我会持续维护。同时付费用户扣费倍率下调。目前相关于官方的90%。
+          09/30:
+          今日起免费站关闭。付费用户我会持续维护。同时付费用户扣费倍率下调。目前相关于官方的90%。
+          <br />
+          新开通Midjourney，直连。多人拼车不限量 / 独享每月200张 / 独享不限量。
           <br />
           <br />
           <a
@@ -137,11 +141,37 @@ export function SideBar(props: { className?: string }) {
                 title: "GPT for all",
                 children: (
                   <div>
+                    <p>00/00</p>
+                    <p>
+                      付费稳定账号，含GPT 4，15元起
+                      <br />
+                      Midjourney，直连。
+                      <br />
+                      - 独享10美金，基础会员99元/月 限200张
+                      <br />
+                      - 独享30美金，标准会员279元/月 不限量
+                      <br />
+                      - 3人共享30美金标准会员，99元/月，不限量
+                      <br />
+                      - 6人共享30美金标准会员，59元/月，不限量
+                      <br />
+                      <br />
+                      <img src={mjsample.src} />
+                      <br />
+                      <br />
+                      微信ID：alzheimer-ai
+                      <br />
+                      <img src={wxcode.src} />
+                    </p>
+                    <hr />
+                    <p>23/10/25</p>
+                    <p>抽空把Midjourney平台准备好了。</p>
+                    <hr />
                     <p>09/30</p>
                     <p>扣费倍率下调，目前相关于官方的90%</p>
                     <p>费率如有变化，我会随时在公告里注明。</p>
                     <hr />
-                    
+
                     <p>09/26</p>
 
                     <h1>通知</h1>
