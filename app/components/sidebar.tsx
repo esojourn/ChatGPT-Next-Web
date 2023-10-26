@@ -157,7 +157,7 @@ export function SideBar(props: { className?: string }) {
                       - 6人共享30美金标准会员，59元/月，不限量
                       <br />
                       <br />
-                      <img src={mjsample.src} />
+                      <img src={mjsample.src} className="mjsample" />
                       <br />
                       <br />
                       微信ID：alzheimer-ai
