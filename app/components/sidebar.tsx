@@ -125,6 +125,8 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-sub-title"]}>
           新闻：
           <br />
+          免费站人太多时，会暂停几小时，可以稍后再来。
+          <br />
           付费用户扣费倍率下调。目前费率相当于官方的90%。
           <br />
           新开通Midjourney，直连。多人拼车不限量 / 独享每月200张 / 独享不限量。
