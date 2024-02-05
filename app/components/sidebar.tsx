@@ -125,7 +125,7 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-title"]}>阿兹海默GPT</div>
         <div className={styles["sidebar-sub-title"]}>
           新闻： 02/05：
-          GPT-4-Turbo下调费率，目前相当于官网的45%。GPT-4，相当于官网90%。
+          GPT-4-Turbo下调费率，目前相当于GPT-4的50%。GPT-4，相当于官网90%。
           <br />
           支持最新版模型：gpt-4-0125-preview
           <br />
