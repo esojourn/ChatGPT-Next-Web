@@ -124,13 +124,14 @@ export function SideBar(props: { className?: string }) {
       <div className={styles["sidebar-header"]}>
         <div className={styles["sidebar-title"]}>阿兹海默GPT</div>
         <div className={styles["sidebar-sub-title"]}>
-          新闻：
+          新闻： 02/05：
+          GPT-4-Turbo下调费率，目前相当于官网的45%。GPT-4，相当于官网90%。
+          <br />
+          支持最新版模型：gpt-4-0125-preview
+          <br />
           <br />
           10/26: 新开通Midjourney，直连。多人拼车不限量 / 独享每月200张 /
           独享不限量。
-          <br />
-          09/30:
-          今日起免费站关闭。付费用户我会持续维护。同时付费用户扣费倍率下调。目前相关于官方的90%。
           <br />
           <br />
           <a
