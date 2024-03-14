@@ -16,11 +16,13 @@ import mjsample from "../images/mjsample.png";
 import chat from "../images/chat.jpg";
 import qrcode from "../images/qrcode128.png";
 import Locale from "../locales";
+import AmbulanceIcon from "../icons/ambulance.svg";
 
 import { useAppConfig, useChatStore } from "../store";
 import { showModal } from "./ui-lib";
 
 import {
+  BLOG_URL,
   MAX_SIDEBAR_WIDTH,
   MIN_SIDEBAR_WIDTH,
   NARROW_SIDEBAR_WIDTH,
@@ -121,17 +123,17 @@ export function SideBar(props: { className?: string }) {
       }`}
     >
       <div className={styles["sidebar-header"]}>
-        <div className={styles["sidebar-title"]}>GPT for all</div>
+        <div className={styles["sidebar-title"]}>GPT for Free</div>
         <div className={styles["sidebar-sub-title"]}>
-          新闻：
-          <br />
-          免费站人太多时，会暂停几小时，可以稍后再来。
-          <br />
-          付费用户扣费倍率下调。目前费率相当于官方的90%。
-          <br />
-          新开通Midjourney，直连。多人拼车不限量 / 独享每月200张 / 独享不限量。
-          <br />
-          <br />
+          <p>
+            关注公众号“阿兹海默”，获取最新密码。
+            <br />
+            免费站人太多时，会暂停几小时，可以稍后再来。
+            我们使用付费站收入，来支持免费站运行。
+          </p>
+          <li>付费站支持GPT-4，Claude-3-Opus等高级模型。</li>
+          <li>支持联网、图片升成，图片/文档识别等高级功能。</li>
+          <p>如有余力，请考虑使用付费站支持本项目。15元起。</p>
           <a
             href="#"
             className={styles["more-news"]}
@@ -141,27 +143,53 @@ export function SideBar(props: { className?: string }) {
                 title: "GPT for all",
                 children: (
                   <div>
-                    <p>00/00</p>
+                    我们使用付费站收入，来支持免费站运行。
+                    <br />
+                    不必支付昂贵月租，不必承担封号风险，不需要魔法可直连。
+                    <br />
+                    按照实际用量计费。15元起。
+                    <br />
+                    付费用户扣费倍率下调。目前费率相当于官方的84%。
+                    <h2>付费站支持模型</h2>
+                    <ul>
+                      <li>
+                        gpt-4-plus：支持文档/图片识别、Dall-E3图片生成、支持联网搜索（用英文搜索效果更好，注意额度消耗）。
+                      </li>
+                      <li>
+                        gpt-4-turbo：知识截止23年12月，支持128k
+                        token长度，减少“变懒”症状。价格相当于gpt-4的1/3
+                      </li>
+                      <li>gpt-4-vision：支持“视觉”功能，可分析图片内容</li>
+                      <li>
+                        claude-3-opus：超大杯的Claude
+                        3模型。有报告认为分析推理能力超过gpt-4
+                      </li>
+                      <li>
+                        claude-3-sonnet：支持联网，直接输入URL网址抓取内容（注意额度消耗）。
+                      </li>
+                      <li>gpt-3-turbo：便宜，输出速度快</li>
+                    </ul>
+                    <p>目前整体费率，大约是官网的84%。详细价格见下表。</p>
+                    <h2>费用计算完全透明</h2>
+                    <p>每一条问答的费用消耗，在设置里都精确可查。</p>
                     <p>
-                      付费稳定账号，含GPT 4，15元起
+                      购买联系微信：alzheimer-ai
                       <br />
-                      Midjourney，直连。
+                      <img src={wxcode.src} />
+                    </p>
+                    <hr />
+                    <p>
+                      <br />
+                      Midjourney，中转站，可直连。
                       <br />
                       - 独享10美金，基础会员99元/月 限200张
                       <br />
                       - 独享30美金，标准会员279元/月 不限量
                       <br />
-                      - 3人共享30美金标准会员，99元/月，不限量
-                      <br />
-                      - 6人共享30美金标准会员，59元/月，不限量
-                      <br />
                       <br />
                       <img src={mjsample.src} className={styles["mjsample"]} />
                       <br />
                       <br />
-                      微信ID：alzheimer-ai
-                      <br />
-                      <img src={wxcode.src} />
                     </p>
                     <hr />
                     <p>23/10/25</p>
@@ -186,7 +214,6 @@ export function SideBar(props: { className?: string }) {
                     <p>
                       一直觉得大城市的底线和宽容度高一些，但是第二件事离我很近。我需要坦白，我的职业技能全部都是来自于google里查到的知识。毕竟学校讲授的内容太过时。外面在用oracle的时候，学校里只讲foxbase。很多实用的技术，我在学校里连名字都没有听过。这样看来，脑子里的知识来源已经违法了。不知道会不会枪毙。
                     </p>
-
                     <h1>初衷</h1>
                     <p>
                       做免费站的想法，来源于ChatGPT横空出世时的惊艳。如同20多年前，从DOS命令行时代，看到Photoshop里那只翠绿红眼的青蛙图片。所有人都知道，又一项改变未来，也会影响很多人就业的技术革新出现了。地球上，大部分的人都可以免费使用。但有极少数地方的人，需要大量技能，才能有这个机会。我希望能分享这样的机会，不成为少数人的特权，也希望借这个热度尝试一下自媒体运营。
@@ -197,7 +224,6 @@ export function SideBar(props: { className?: string }) {
                     <p>
                       <img src={chat.src} width="30%" />
                     </p>
-
                     <h1>结语</h1>
                     <p>
                       我知道用户里有不少大学生。当年美国恶法《禁酒令》实行的时候，酒精饮料从来没有消亡，我这小破站关闭之后，相信你们不难找到其他替代。
@@ -219,7 +245,6 @@ export function SideBar(props: { className?: string }) {
                         16K的付费用户不用担心，除非遇到不可抗力。我会负责支持维护到底。
                       </i>
                     </p>
-
                     <hr />
                     <p>09/13</p>
                     <p>
@@ -284,7 +309,7 @@ export function SideBar(props: { className?: string }) {
         </div>
       </div>
 
-      <div className={styles["sidebar-header-bar"]}>
+      {/* <div className={styles["sidebar-header-bar"]}>
         <IconButton
           icon={<MaskIcon />}
           text={shouldNarrow ? undefined : Locale.Mask.Name}
@@ -299,7 +324,7 @@ export function SideBar(props: { className?: string }) {
           onClick={() => showToast(Locale.WIP)}
           shadow
         />
-      </div>
+      </div> */}
 
       <div
         className={styles["sidebar-body"]}
@@ -330,8 +355,8 @@ export function SideBar(props: { className?: string }) {
             </Link>
           </div>
           <div className={styles["sidebar-action"]}>
-            <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
-              <IconButton icon={<GithubIcon />} shadow />
+            <a href={BLOG_URL} target="_blank" rel="noopener noreferrer">
+              <IconButton icon={<AmbulanceIcon />} shadow />
             </a>
           </div>
         </div>

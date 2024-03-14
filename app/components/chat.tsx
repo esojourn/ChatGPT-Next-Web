@@ -1057,18 +1057,23 @@ function _Chat() {
           </div>
         )}
 
-        <div className={`window-header-title ${styles["chat-body-title"]}`}>
-          <div
-            className={`window-header-main-title ${styles["chat-body-main-title"]}`}
-            onClickCapture={() => setIsEditingMessage(true)}
-          >
-            {!session.topic ? DEFAULT_TOPIC : session.topic}
+        {!isMobileScreen && (
+          <div className={`window-header-title ${styles["chat-body-title"]}`}>
+            <div
+              className={`window-header-main-title ${styles["chat-body-main-title"]}`}
+              onClickCapture={() => setIsEditingMessage(true)}
+            >
+              {!session.topic ? DEFAULT_TOPIC : session.topic}
+            </div>
+            <div className="window-header-sub-title">
+              {Locale.Chat.SubTitle(session.messages.length)}
+            </div>
           </div>
-          <div className="window-header-sub-title">
-            {Locale.Chat.SubTitle(session.messages.length)}
-          </div>
+        )}
+        <div>
+          <img src={qrcode.src} alt="" width="80px" />
+          <img src={wxcode.src} alt="" width="80px" />
         </div>
-
         <div className="window-actions">
           {!isMobileScreen && (
             <div className="window-action-button">
@@ -1124,9 +1129,10 @@ function _Chat() {
         <div className={styles["donate-wrapper"]}>
           <div className={styles["donate-description"]}>
             <p>
-              付费用户，兼容GPT 4, claude 2 100k。
+              免费站获取最新密码：请关注公众号“阿兹海默”，
               <br />
-              <img src={wxcode.src} alt="" width="100px" />
+              付费用户可使用：GPT 4, claude 3 opus。支持联网 / 文档输入分析 /
+              出图等。
             </p>
           </div>
         </div>
