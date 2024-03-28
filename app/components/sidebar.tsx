@@ -131,9 +131,10 @@ export function SideBar(props: { className?: string }) {
             免费站人太多时，会暂停几小时，可以稍后再来。
             我们使用付费站收入，来支持免费站运行。
           </p>
+          <li>付费站新增suno-v3模型支持。根据文字描述生成音乐。</li>
           <li>付费站支持GPT-4，Claude-3-Opus等高级模型。</li>
           <li>支持联网、图片升成，图片/文档识别等高级功能。</li>
-          <p>如有余力，请考虑使用付费站支持本项目。15元起。</p>
+          <p>如需更多功能，请微信联系。15元起。</p>
           <a
             href="#"
             className={styles["more-news"]}
