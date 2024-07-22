@@ -134,6 +134,7 @@ export function SideBar(props: { className?: string }) {
           <li>
             免费站全面升级，开通gpt-4o-mini模型。根据官方信息，智能程度相当于gpt4的80%
           </li>
+          <li>付费站claude 3 opus降价40%</li>
           <li>付费站新增suno-v3模型支持。根据文字描述生成音乐。</li>
           <li>付费站支持GPT-4，Claude-3-Opus等高级模型。</li>
           <li>支持联网、图片升成，图片/文档识别等高级功能。</li>
