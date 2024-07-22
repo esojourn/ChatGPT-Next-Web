@@ -8,7 +8,7 @@ const cn = {
   Error: {
     Unauthorized: isApp
       ? "检测到无效 API Key，请前往[设置](/#/settings)页检查 API Key 是否配置正确。"
-      : "访问密码不正确或为空，请前往[登录](/#/auth)页输入正确的访问密码，或者在[设置](/#/settings)页填入你自己的 OpenAI API Key。在公众号“阿兹海默”后台，回复“密码”免费获取最新密码",
+      : "访问密码不正确或为空，请前往[登录](/#/auth)页输入正确的访问密码，或者在[设置](/#/settings)页填入你自己的 OpenAI API Key。请关注小红书“alz_ai”私信获取密码",
   },
   Auth: {
     Title: "需要密码",
@@ -232,7 +232,7 @@ const cn = {
     },
     AccessCode: {
       Title: "访问密码",
-      SubTitle: "获取新密码请在公众号“阿兹海默”，回复“密码”",
+      SubTitle: "请关注小红书“alz_ai”私信获取密码",
       Placeholder: "请输入访问密码",
     },
     Endpoint: {

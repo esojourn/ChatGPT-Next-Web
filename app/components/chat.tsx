@@ -1129,7 +1129,7 @@ function _Chat() {
         <div className={styles["donate-wrapper"]}>
           <div className={styles["donate-description"]}>
             <p>
-              免费站获取最新密码：请关注公众号“阿兹海默”，
+              免费站获取最新密码：请关注小红书“alz_ai”私信获取，
               <br />
               付费用户可使用：GPT 4, claude 3 opus。支持联网 / 文档输入分析 /
               出图等。

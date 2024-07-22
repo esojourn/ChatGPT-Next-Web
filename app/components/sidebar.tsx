@@ -126,11 +126,14 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-title"]}>GPT for Free</div>
         <div className={styles["sidebar-sub-title"]}>
           <p>
-            关注公众号“阿兹海默”，获取最新密码。
+            请关注小红书“alz_ai”私信获取密码。
             <br />
             免费站人太多时，会暂停几小时，可以稍后再来。
             我们使用付费站收入，来支持免费站运行。
           </p>
+          <li>
+            免费站全面升级，开通gpt-4o-mini模型。根据官方信息，智能程度相当于gpt4的80%
+          </li>
           <li>付费站新增suno-v3模型支持。根据文字描述生成音乐。</li>
           <li>付费站支持GPT-4，Claude-3-Opus等高级模型。</li>
           <li>支持联网、图片升成，图片/文档识别等高级功能。</li>
@@ -174,7 +177,7 @@ export function SideBar(props: { className?: string }) {
                     <h2>费用计算完全透明</h2>
                     <p>每一条问答的费用消耗，在设置里都精确可查。</p>
                     <p>
-                      购买联系微信：alzheimer-ai
+                      购买联系微信：alz-ai
                       <br />
                       <img src={wxcode.src} />
                     </p>
@@ -255,7 +258,7 @@ export function SideBar(props: { className?: string }) {
                       如需独享付费账号请私信。GPT 4账号，15元起
                       <br />
                       <br />
-                      微信ID：alzheimer-ai
+                      微信ID：alz-ai
                       <br />
                       <img src={wxcode.src} />
                     </p>
@@ -282,7 +285,7 @@ export function SideBar(props: { className?: string }) {
                     <p>
                       支持GPT 4灵活购买，15元起。收入80%继续投入免费站运营
                       <br />
-                      详询微信：alzheimer-ai
+                      详询微信：alz-ai
                     </p>
                     <hr />
                     <p>7/17</p>
