@@ -1070,9 +1070,11 @@ function _Chat() {
             </div>
           </div>
         )}
-        <div>
-          <img src={qrcode.src} alt="" width="80px" />
-          <img src={wxcode.src} alt="" width="80px" />
+        <div className="header-ad">
+          技术支持及高级模型购买，请加微信 alz-ai <br />
+          付费版支持GPT-4, Claude 3 Opus / 3.5 Sonnet
+          <br />
+          支持联网、出图、文档分析等。15元起
         </div>
         <div className="window-actions">
           {!isMobileScreen && (
@@ -1129,10 +1131,10 @@ function _Chat() {
         <div className={styles["donate-wrapper"]}>
           <div className={styles["donate-description"]}>
             <p>
-              免费站获取最新密码：请关注小红书“alz_ai”私信获取，
+              免费站获取最新密码：请加微信“alz-ai”私信获取，
               <br />
-              付费用户可使用：GPT 4, claude 3 opus。支持联网 / 文档输入分析 /
-              出图等。
+              付费用户可使用：GPT-4 / 4o, claude 3 opus / 3.5 sonnet。支持联网 /
+              文档输入分析 / 出图等。
               <br />
               付费站新增suno-v3模型支持。根据文字描述生成音乐。如需更多功能，请微信联系。
             </p>

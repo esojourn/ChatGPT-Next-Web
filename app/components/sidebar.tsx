@@ -126,7 +126,7 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-title"]}>GPT for Free</div>
         <div className={styles["sidebar-sub-title"]}>
           <p>
-            请关注小红书“alz_ai”私信获取密码。
+            请加微信“alz-ai”私信获取密码。
             <br />
             免费站人太多时，会暂停几小时，可以稍后再来。
             我们使用付费站收入，来支持免费站运行。
