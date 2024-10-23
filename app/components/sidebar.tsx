@@ -30,6 +30,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { isIOS, useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { showConfirm, Selector } from "./ui-lib";
+import { showNotification } from "@/app/components/notification";
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
@@ -222,6 +223,22 @@ export function SideBar(props: { className?: string }) {
   const navigate = useNavigate();
   const config = useAppConfig();
   const chatStore = useChatStore();
+  useEffect(() => {
+    // 获取当前日期
+    const currentDate = new Date().toDateString();
+
+    // 从localStorage中获取上次访问日期
+    const lastVisitDate = localStorage.getItem("lastVisitDate");
+
+    // 如果上次访问日期与当前日期不同，说明是每天第一次访问
+    if (lastVisitDate !== currentDate) {
+      // 显示弹窗逻辑
+      showNotification();
+
+      // 将当前日期存储到localStorage中
+      localStorage.setItem("lastVisitDate", currentDate);
+    }
+  }, []);
 
   return (
     <SideBarContainer

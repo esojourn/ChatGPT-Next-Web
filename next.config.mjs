@@ -29,6 +29,15 @@ const nextConfig = {
   output: mode,
   images: {
     unoptimized: mode === "export",
+    domains: [process.env.AWS_BUCKET_NAME + ".s3." + process.env.AWS_DEFAULT_REGION+".amazonaws.com"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: process.env.AWS_BUCKET_NAME + ".s3." + process.env.AWS_DEFAULT_REGION+".amazonaws.com",
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
   experimental: {
     forceSwcTransforms: true,

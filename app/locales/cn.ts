@@ -81,6 +81,7 @@ const cn = {
       Clear: "清除聊天",
       Settings: "对话设置",
       UploadImage: "上传图片",
+      UploadFile: "上传文件",
     },
     Rename: "重命名对话",
     Typing: "正在输入…",
@@ -92,6 +93,10 @@ const cn = {
       return inputHints + "，/ 触发补全，: 触发命令";
     },
     Send: "发送",
+    AudioRecorder: {
+      Start: "开始录音",
+      Stop: "停止录音",
+    },
     StartSpeak: "说话",
     StopSpeak: "停止",
     Config: {
@@ -106,6 +111,21 @@ const cn = {
       copyLastMessage: "复制最后一个回复",
       copyLastCode: "复制最后一个代码块",
       showShortcutKey: "显示快捷方式",
+    },
+    Upload: {
+      Title: "上传文件",
+      SubTitle: "上传文件到聊天",
+      Loading: "上传中...",
+      Success: "成功上传!",
+      Fail: "上传失败",
+      FailGetPresignedUrl: "获取上传链接失败",
+      FileSizeExceed: "文件大小不能超过5MB",
+      FileTypeNotSupported:
+        "不支持的文件类型, 仅支持图片jpeg, jpg, png, gif, webp",
+    },
+    Settings: {
+      Voice: "语音",
+      responseFormat: "音频格式",
     },
   },
   Export: {
@@ -300,11 +320,12 @@ const cn = {
     Usage: {
       Title: "余额查询",
       SubTitle(used: any, total: any) {
-        return `本月已使用 $${used}，订阅总额 $${total}`;
+        return `本月已使用 $${used}，订阅总额 $${total}。（可能因缓存原因更新延迟，'使用日志'可实时查询消费明细）`;
       },
       IsChecking: "正在检查…",
       Check: "重新检查",
       NoAccess: "输入 API Key 或访问密码查看余额",
+      Log: "使用日志",
     },
 
     Access: {
@@ -538,6 +559,8 @@ const cn = {
         SubTitle: "生成语音的速度",
       },
     },
+
+    SeeMore: "详见公告",
   },
   Store: {
     DefaultTopic: "新的聊天",
@@ -765,6 +788,55 @@ const cn = {
     },
     GenerateParams: "生成参数",
     Detail: "详情",
+  },
+  Midjourney: {
+    SelectImgMax: (max: number) => `最多可选择 ${max} 张图片`,
+    InputDisabled: "该模式下不支持输入文字内容, 选择图片后，点击发送按钮提交",
+    HasImgTip:
+      "提示：垫图模式/识图(describe)模式只会使用第一张图片，混图(blend)模式会按顺序使用选中的5张图片（点击图片可以移除）",
+    ModeImagineUseImg: "垫图（图生图）模式",
+    ModeBlend: "混图模式",
+    ModeDescribe: "识图（图生文）模式",
+    NeedInputUseImgPrompt:
+      "垫图模式下需要输入内容才能使用图片，请以“/mj”开头输入内容",
+    BlendMinImg: (min: number, max: number) =>
+      `混图模式下至少需要 ${min} 张图片，至多 ${max} 张图片`,
+    TaskErrUnknownType: "任务提交失败：未知的任务类型",
+    TaskErrNotSupportType: (type: string) =>
+      `任务提交失败：不支持的任务类型 -> ${type}`,
+    StatusCode: (code: number) => `状态码：${code}`,
+    TaskSubmitErr: (err: string) => `任务提交失败：${err}`,
+    RespBody: (body: string) => `响应体：${body}`,
+    None: "无",
+    UnknownError: "未知错误",
+    UnknownReason: "未知原因",
+    TaskPrefix: (prompt: string, taskId: string) =>
+      `**画面描述:** ${prompt}\n**任务ID:** ${taskId}\n`,
+    PleaseWait: "请稍等片刻",
+    TaskSubmitOk: "任务提交成功",
+    TaskSubmitExist: "任务已存在",
+    TaskSubmitQueuing: "任务正在排队",
+    TaskStatusFetchFail: "任务状态获取失败",
+    TaskStatus: "任务状态",
+    TaskRemoteSubmit: "任务已提交至Midjourney服务器",
+    TaskProgressTip: (progress: number | undefined) =>
+      `任务正在运行${progress ? `，当前进度：${progress}` : ""}`,
+    TaskNotStart: "任务尚未开始",
+    Url: "地址",
+    ImageAgent: "图像代理",
+    ImageAgentOpenTip:
+      "开启之后，返回的Midjourney图片将会通过本程序自身代理，所以本程序需要处于可以访问cdn.discordapp.com的网络环境中才有效",
+  },
+  ApiKeyLog: {
+    Title: "API Key 使用日志",
+    SubTitle: "查看 API Key 使用记录",
+    Table: {
+      CreatedAt: "创建时间",
+      ModelName: "模型名称",
+      PromptTokens: "提示",
+      CompletionTokens: "补全",
+      Quota: "配额",
+    },
   },
 };
 

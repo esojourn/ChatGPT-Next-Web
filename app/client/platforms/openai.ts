@@ -8,6 +8,8 @@ import {
   Azure,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
+  TTS_Audio_Format,
+  TTS_Voice,
 } from "@/app/constant";
 import {
   ChatMessageTool,
@@ -27,8 +29,11 @@ import { cloudflareAIGatewayUrl } from "@/app/utils/cloudflare";
 import { DalleSize, DalleQuality, DalleStyle } from "@/app/typing";
 
 import {
+  AudioOptions,
+  AudioWithFileOptions,
   ChatOptions,
   getHeaders,
+  getHeadersWithAudio,
   LLMApi,
   LLMModel,
   LLMUsage,
@@ -78,6 +83,15 @@ export interface DalleRequestPayload {
 
 export class ChatGPTApi implements LLMApi {
   private disableListModels = true;
+  audioSpeech(options: AudioOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranscriptions(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranslations(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
 
   path(path: string): string {
     const accessStore = useAccessStore.getState();
@@ -468,6 +482,266 @@ export class ChatGPTApi implements LLMApi {
         sorted: 1,
       },
     }));
+  }
+
+  // speech, 将文本生成音频
+  async audioSpeech(options: AudioOptions) {
+    const session = useChatStore.getState().currentSession();
+
+    const modelConfig = {
+      ...useAppConfig.getState().modelConfig,
+      ...useChatStore.getState().currentSession().mask.modelConfig,
+      ...{
+        model: options.config.model,
+      },
+    };
+
+    const requestPayload = {
+      model: modelConfig.model,
+      input: options.prompt, // 最大4096, 控制字符长度
+      voice: session.settings.voice || TTS_Voice.Alloy, // 语音
+      response_format: session.settings.responseFormat || TTS_Audio_Format.MP3, // 音频格式
+      speed: 1, // XXX: 0.25-4之间，1.0默认值，后期添加
+    };
+
+    console.log("[Request] openai payload: ", requestPayload);
+
+    const controller = new AbortController();
+    options.onController?.(controller);
+
+    try {
+      const audioSpeechPath = this.path(OpenaiPath.AudioSpeechPath);
+      const audioSpeechPayload = {
+        method: "POST",
+        body: JSON.stringify(requestPayload),
+        signal: controller.signal,
+        headers: getHeadersWithAudio(),
+      };
+
+      // make a fetch request
+      const requestTimeoutId = setTimeout(
+        () => controller.abort(),
+        REQUEST_TIMEOUT_MS,
+      );
+
+      const res = await fetch(audioSpeechPath, audioSpeechPayload);
+      clearTimeout(requestTimeoutId);
+
+      let message: any;
+
+      let contentType = res.headers.get("content-type");
+      if (contentType && contentType.startsWith("audio/")) {
+        const blob = await res.blob();
+
+        const audioFile = new File([blob], "audio.mp3", {
+          type: blob.type,
+        });
+
+        let audioFileUrl = "";
+        await uploadToS3({
+          uploadFile: audioFile,
+          onSuccess: (url) => {
+            audioFileUrl = url.custom_url;
+            showToast(Locale.Chat.Upload.Success);
+          },
+          onError: (error) => {
+            // console.error("[Request] failed to upload audio file", error.name +':'+error.message);
+            // console.log("Upload failed:", error);
+            // 服务器端错误..
+            // 定义好的错误信息
+            showToast(Locale.Chat.Upload.Fail);
+          },
+        });
+        if (audioFileUrl != "") {
+          // 一个音频文件，我们将它保存到AWS中
+          message = {
+            type: "audio",
+            audio_url: audioFileUrl,
+          };
+        } else {
+          message = "请求失败，音频文件上传失败";
+        }
+      } else {
+        message = "请求失败，返回内容不是音频文件";
+      }
+
+      // const message = this.extractMessage(resJson);
+      options.onFinish(message);
+    } catch (e) {
+      console.log("[Request] failed to make a chat request", e);
+      options.onError?.(e as Error);
+    }
+  }
+
+  // transcriptions, 将音频转录成文本。
+  async audioTranscriptions(options: AudioWithFileOptions) {
+    const session = useChatStore.getState().currentSession();
+    const { file } = options;
+
+    const modelConfig = {
+      ...useAppConfig.getState().modelConfig,
+      ...useChatStore.getState().currentSession().mask.modelConfig,
+      ...{
+        model: options.config.model,
+      },
+    };
+    function getExtensionByMimeType(mimeType: string) {
+      const audioMimeTypes = {
+        "audio/mpeg": "mp3",
+        "audio/wav": "wav",
+        "audio/ogg": "ogg",
+        "audio/webm": "webm",
+        "audio/flac": "flac",
+        "audio/aac": "aac",
+        "audio/mp4": "mp4",
+        "audio/opus": "ogg",
+      };
+
+      // @ts-ignore
+      return audioMimeTypes[mimeType] || "";
+    }
+
+    await fetch(file)
+      .then((response) => response.blob())
+      // .then(async blob => {
+      //   let fileUrl = '';
+      //   console.log('uploading!', blob);
+      //   await uploadToS3({
+      //     uploadFile: new File([blob], 'audio.mp3', {
+      //       type: blob.type,
+      //     }),
+      //     onSuccess: (url) => {
+      //       console.log('upload success!', url);
+      //       fileUrl = url.custom_url;
+      //       showToast(Locale.Chat.Upload.Success);
+      //     },
+      //     onError: (error) => {
+      //       console.error("Upload failed:", error);
+      //       // 服务器端错误..
+      //       // 定义好的错误信息
+      //       showToast(Locale.Chat.Upload.Fail);
+      //     },
+      //   })
+      //   return fileUrl;
+      // })
+      .then(async (blob) => {
+        // const requestPayload = {
+        //   model: modelConfig.model, // 必须 当前仅有whisper-1
+        //   file:, // 必须 要转录的音频文件，采用以下格式之一：mp3、mp4、mpeg、mpga、m4a、wav 或 webm。
+        //   prompt: options.prompt, // 可选 文本，用于指导模型的风格或继续之前的音频片段。提示应与音频语言相匹配。
+        //   response_format: WHISPER_RESPONSE_TYPE, // 可选
+        //   temperature: 1, // 可选, 0-1之间，越高越随机
+        //   language: "", // 可选 以ISO-639-1代码表示的语言代码。如果未指定，将自动检测语言。
+        // };
+
+        // 创建一个 File 对象，将 Blob 数据包装在其中
+        const file = new File([blob], getExtensionByMimeType(blob.type), {
+          type: blob.type,
+        });
+        // 创建一个 input 元素
+        const fileInput: HTMLInputElement = document.createElement("input");
+        fileInput.type = "file";
+
+        // 将 File 对象赋给 input 元素的 files 属性
+        const fileList = new DataTransfer();
+        fileList.items.add(file);
+        fileInput.files = fileList.files;
+
+        console.log("fileInput", fileInput);
+
+        var formData = new FormData();
+        formData.append("file", fileInput.files[0], "");
+        formData.append("model", "whisper-1");
+        formData.append("prompt", options.prompt);
+        formData.append("response_format", "json");
+        formData.append("temperature", "0");
+        formData.append("language", "");
+
+        console.log("[Request] openai payload formData: ", formData);
+
+        const controller = new AbortController();
+        options.onController?.(controller);
+        try {
+          const audioPath = this.path(OpenaiPath.AudioTranscriptionsPath);
+          const headers = getHeaders();
+          headers["Content-Type"] = "multipart/form-data";
+          const audioPayload = {
+            method: "POST",
+            body: formData,
+            signal: controller.signal,
+            headers: headers,
+          };
+
+          // make a fetch request
+          const requestTimeoutId = setTimeout(
+            () => controller.abort(),
+            REQUEST_TIMEOUT_MS,
+          );
+
+          const res = await fetch(audioPath, audioPayload);
+          clearTimeout(requestTimeoutId);
+
+          const resJson = await res.json();
+          // 返回格式: { text: 'string' }
+          const message = this.extractMessage(resJson);
+          options.onFinish(message);
+        } catch (e) {
+          console.log("[Request] failed to make a chat request", e);
+          options.onError?.(e as Error);
+        }
+      });
+  }
+
+  // translations, 将音频翻译成英文。
+  async audioTranslations(options: AudioWithFileOptions) {
+    // TODO: 取得Session中的设置
+    const modelConfig = {
+      ...useAppConfig.getState().modelConfig,
+      ...useChatStore.getState().currentSession().mask.modelConfig,
+      ...{
+        model: options.config.model,
+      },
+    };
+
+    const requestPayload = {
+      model: modelConfig.model, // 必须 当前仅有whisper-1
+      file: options.file, // 必须 要转录的音频文件，采用以下格式之一：mp3、mp4、mpeg、mpga、m4a、wav 或 webm。
+      prompt: options.prompt, // 可选 文本，用于指导模型的风格或继续之前的音频片段。提示应与音频语言相匹配。
+      response_format: "", // 可选
+      temperature: 1, // 可选, 0-1之间，越高越随机
+    };
+
+    console.log("[Request] openai payload: ", requestPayload);
+
+    const controller = new AbortController();
+    options.onController?.(controller);
+
+    try {
+      const audioPath = this.path(OpenaiPath.AudioTranslationsPath);
+      const audioPayload = {
+        method: "POST",
+        body: JSON.stringify(requestPayload),
+        signal: controller.signal,
+        headers: getHeaders(),
+      };
+
+      // make a fetch request
+      const requestTimeoutId = setTimeout(
+        () => controller.abort(),
+        REQUEST_TIMEOUT_MS,
+      );
+
+      const res = await fetch(audioPath, audioPayload);
+      clearTimeout(requestTimeoutId);
+
+      const resJson = await res.json();
+      // 返回格式: { text: 'string' }
+      const message = this.extractMessage(resJson);
+      options.onFinish(message);
+    } catch (e) {
+      console.log("[Request] failed to make a chat request", e);
+      options.onError?.(e as Error);
+    }
   }
 }
 export { OpenaiPath };

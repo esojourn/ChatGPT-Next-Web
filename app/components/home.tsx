@@ -74,6 +74,13 @@ const Sd = dynamic(async () => (await import("./sd")).Sd, {
   loading: () => <Loading noLogo />,
 });
 
+const ApiKeyLog = dynamic(
+  async () => (await import("./api-key-log")).ApiKeyLog,
+  {
+    loading: () => <Loading noLogo />,
+  },
+);
+
 export function useSwitchTheme() {
   const config = useAppConfig();
 
@@ -189,6 +196,7 @@ function Screen() {
             <Route path={Path.SearchChat} element={<SearchChat />} />
             <Route path={Path.Chat} element={<Chat />} />
             <Route path={Path.Settings} element={<Settings />} />
+            <Route path={Path.ApiKeyLog} element={<ApiKeyLog />} />
           </Routes>
         </WindowContent>
       </>

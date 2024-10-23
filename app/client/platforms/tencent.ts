@@ -3,6 +3,8 @@ import { ApiPath, TENCENT_BASE_URL, REQUEST_TIMEOUT_MS } from "@/app/constant";
 import { useAccessStore, useAppConfig, useChatStore } from "@/app/store";
 
 import {
+  AudioOptions,
+  AudioWithFileOptions,
   ChatOptions,
   getHeaders,
   LLMApi,
@@ -60,6 +62,15 @@ function capitalizeKeys(obj: any): any {
 }
 
 export class HunyuanApi implements LLMApi {
+  audioSpeech(options: AudioOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranscriptions(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranslations(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   path(): string {
     const accessStore = useAccessStore.getState();
 

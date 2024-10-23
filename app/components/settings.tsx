@@ -15,6 +15,8 @@ import DownloadIcon from "../icons/download.svg";
 import UploadIcon from "../icons/upload.svg";
 import ConfigIcon from "../icons/config.svg";
 import ConfirmIcon from "../icons/confirm.svg";
+import LogIcon from "../icons/log.svg";
+import BellIcon from "../icons/bell.svg";
 
 import ConnectionIcon from "../icons/connection.svg";
 import CloudSuccessIcon from "../icons/cloud-success.svg";
@@ -50,7 +52,6 @@ import Locale, {
   getLang,
 } from "../locales";
 import { copyToClipboard } from "../utils";
-import Link from "next/link";
 import {
   Anthropic,
   Azure,
@@ -83,6 +84,7 @@ import { nanoid } from "nanoid";
 import { useMaskStore } from "../store/mask";
 import { ProviderType } from "../utils/cloud";
 import { TTSConfigList } from "./tts-config";
+import { showNotification } from "@/app/components/notification";
 
 function EditPromptModal(props: { id: string; onClose: () => void }) {
   const promptStore = usePromptStore();
@@ -735,7 +737,7 @@ export function Settings() {
   const openAIConfigComponent = accessStore.provider ===
     ServiceProvider.OpenAI && (
     <>
-      <ListItem
+      {/* <ListItem
         title={Locale.Settings.Access.OpenAI.Endpoint.Title}
         subTitle={Locale.Settings.Access.OpenAI.Endpoint.SubTitle}
       >
@@ -750,23 +752,33 @@ export function Settings() {
             )
           }
         ></input>
-      </ListItem>
+      </ListItem> */}
       <ListItem
         title={Locale.Settings.Access.OpenAI.ApiKey.Title}
         subTitle={Locale.Settings.Access.OpenAI.ApiKey.SubTitle}
       >
-        <PasswordInput
-          aria={Locale.Settings.ShowPassword}
-          aria-label={Locale.Settings.Access.OpenAI.ApiKey.Title}
-          value={accessStore.openaiApiKey}
-          type="text"
-          placeholder={Locale.Settings.Access.OpenAI.ApiKey.Placeholder}
-          onChange={(e) => {
-            accessStore.update(
-              (access) => (access.openaiApiKey = e.currentTarget.value),
-            );
-          }}
-        />
+        <div className={styles["right-elements"]}>
+          <PasswordInput
+            aria={Locale.Settings.ShowPassword}
+            aria-label={Locale.Settings.Access.OpenAI.ApiKey.Title}
+            value={accessStore.openaiApiKey}
+            type="text"
+            placeholder={Locale.Settings.Access.OpenAI.ApiKey.Placeholder}
+            onChange={(e) => {
+              accessStore.update(
+                (access) => (access.openaiApiKey = e.currentTarget.value),
+              );
+            }}
+          />
+          <div className={styles["see-more"]}>
+            微信联系alz-ai获取密钥，
+            <IconButton
+              icon={<BellIcon></BellIcon>}
+              text={Locale.Settings.SeeMore}
+              onClick={() => showNotification()}
+            />
+          </div>
+        </div>
       </ListItem>
     </>
   );
@@ -1344,7 +1356,7 @@ export function Settings() {
             </Popover>
           </ListItem>
 
-          <ListItem
+          {/* <ListItem
             title={Locale.Settings.Update.Version(currentVersion ?? "unknown")}
             subTitle={
               checkingUpdate
@@ -1367,7 +1379,7 @@ export function Settings() {
                 onClick={() => checkUpdate(true)}
               />
             )}
-          </ListItem>
+          </ListItem> */}
 
           <ListItem title={Locale.Settings.SendKey}>
             <Select
@@ -1666,16 +1678,23 @@ export function Settings() {
               {!showUsage || loadingUsage ? (
                 <div />
               ) : (
-                <IconButton
-                  icon={<ResetIcon></ResetIcon>}
-                  text={Locale.Settings.Usage.Check}
-                  onClick={() => checkUsage(true)}
-                />
+                <div className={styles["right-elements"]}>
+                  <IconButton
+                    icon={<LogIcon></LogIcon>}
+                    text={Locale.Settings.Usage.Log}
+                    onClick={() => navigate(Path.ApiKeyLog)}
+                  />
+                  <IconButton
+                    icon={<ResetIcon></ResetIcon>}
+                    text={Locale.Settings.Usage.Check}
+                    onClick={() => checkUsage(true)}
+                  />
+                </div>
               )}
             </ListItem>
           ) : null}
 
-          <ListItem
+          {/* <ListItem
             title={Locale.Settings.Access.CustomModel.Title}
             subTitle={Locale.Settings.Access.CustomModel.SubTitle}
           >
@@ -1690,7 +1709,7 @@ export function Settings() {
                 )
               }
             ></input>
-          </ListItem>
+          </ListItem> */}
         </List>
 
         <List>
