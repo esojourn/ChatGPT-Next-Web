@@ -230,5 +230,18 @@ export const getServerSideConfig = () => {
     customModels,
     defaultModel,
     allowedWebDavEndpoints,
+
+    file_oss_server_type: process.env.FILE_OSS_SERVER_TYPE,
+    // AWS
+    aws_s3_base_url: process.env.AWS_S3_BASE_URL,
+    aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
+    aws_default_region: process.env.AWS_DEFAULT_REGION,
+    aws_bucket_name: "" + process.env.AWS_BUCKET_NAME,
+    // AliOSS
+    oss_access_key_id: process.env.OSS_ACCESS_KEY_ID,
+    oss_access_key_secret: process.env.OSS_ACCESS_KEY_SECRET,
+    oss_region: process.env.OSS_REGION,
+    oss_bucket_name: process.env.OSS_BUCKET_NAME,
   };
 };

@@ -1,5 +1,7 @@
 import { ApiPath, Google, REQUEST_TIMEOUT_MS } from "@/app/constant";
 import {
+  AudioOptions,
+  AudioWithFileOptions,
   ChatOptions,
   getHeaders,
   LLMApi,
@@ -29,6 +31,15 @@ import { RequestPayload } from "./openai";
 import { fetch } from "@/app/utils/stream";
 
 export class GeminiProApi implements LLMApi {
+  audioSpeech(options: AudioOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranscriptions(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranslations(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   path(path: string): string {
     const accessStore = useAccessStore.getState();
 

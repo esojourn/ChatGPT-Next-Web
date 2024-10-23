@@ -78,3 +78,17 @@
     overflow:visible ;
   }
 }
+
+.right-elements {
+  text-align: right;
+  > div {
+    max-width: 100%;
+  }
+}
+.see-more {
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+  justify-content: end;
+  margin: 10px 0;
+}
