@@ -13,6 +13,7 @@ import {
 } from "../store";
 import { ChatGPTApi, DalleRequestPayload } from "./platforms/openai";
 import { GeminiProApi } from "./platforms/google";
+import { UniSeeSApi } from "@/app/client/platforms/unisee";
 import { ClaudeApi } from "./platforms/anthropic";
 import { ErnieApi } from "./platforms/baidu";
 import { DoubaoApi } from "./platforms/bytedance";
@@ -29,9 +30,12 @@ export const TTSModels = ["tts-1", "tts-1-hd"] as const;
 export type ChatModel = ModelType;
 
 export interface MultimodalContent {
-  type: "text" | "image_url";
+  type: "text" | "image_url" | "audio";
   text?: string;
   image_url?: {
+    url: string;
+  };
+  audio_url?: {
     url: string;
   };
 }
@@ -73,6 +77,20 @@ export interface ChatOptions {
   onController?: (controller: AbortController) => void;
   onBeforeTool?: (tool: ChatMessageTool) => void;
   onAfterTool?: (tool: ChatMessageTool) => void;
+
+  additionalSettings?: Record<string, any>;
+}
+
+export interface AudioOptions {
+  prompt: string;
+  config: LLMConfig;
+  onFinish: (message: any) => void;
+  onError?: (err: Error) => void;
+  onController?: (controller: AbortController) => void;
+}
+
+export interface AudioWithFileOptions extends AudioOptions {
+  file: string;
 }
 
 export interface LLMUsage {
@@ -86,6 +104,7 @@ export interface LLMModel {
   available: boolean;
   provider: LLMModelProvider;
   sorted: number;
+  description: string;
 }
 
 export interface LLMModelProvider {
@@ -100,6 +119,10 @@ export abstract class LLMApi {
   abstract speech(options: SpeechOptions): Promise<ArrayBuffer>;
   abstract usage(): Promise<LLMUsage>;
   abstract models(): Promise<LLMModel[]>;
+
+  abstract audioSpeech(options: AudioOptions): Promise<void>;
+  abstract audioTranscriptions(options: AudioWithFileOptions): Promise<void>;
+  abstract audioTranslations(options: AudioWithFileOptions): Promise<void>;
 }
 
 type ProviderName = "openai" | "azure" | "claude" | "palm";
@@ -151,6 +174,9 @@ export class ClientApi {
         break;
       case ModelProvider.Iflytek:
         this.llm = new SparkApi();
+        break;
+      case ModelProvider.UniSee:
+        this.llm = new UniSeeSApi();
         break;
       default:
         this.llm = new ChatGPTApi();
@@ -303,6 +329,32 @@ export function getHeaders(ignoreHeaders: boolean = false) {
     headers[authHeader] = bearerToken;
   } else if (isEnabledAccessControl && validString(accessStore.accessCode)) {
     headers["Authorization"] = getBearerToken(
+      ACCESS_CODE_PREFIX + accessStore.accessCode,
+    );
+  }
+
+  return headers;
+}
+
+export function getHeadersWithAudio() {
+  const accessStore = useAccessStore.getState();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  const authHeader = "Authorization";
+  const apiKey = accessStore.openaiApiKey;
+
+  const makeBearer = (s: string) => `Bearer ${s.trim()}`;
+  const validString = (x: string) => x && x.length > 0;
+
+  // use user's api key first
+  if (validString(apiKey)) {
+    headers[authHeader] = makeBearer(apiKey);
+  } else if (
+    accessStore.enabledAccessControl() &&
+    validString(accessStore.accessCode)
+  ) {
+    headers[authHeader] = makeBearer(
       ACCESS_CODE_PREFIX + accessStore.accessCode,
     );
   }

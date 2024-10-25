@@ -420,3 +420,155 @@ export function semverCompare(a: string, b: string) {
     caseFirst: "upper",
   });
 }
+
+export function filterMessageUrls(text: string): string {
+  let jsonObj = JSON.parse(text);
+  if (jsonObj?.error?.type) {
+    // 去除冒号后面的内容
+    // 包含_api_error的错误信息
+    if (jsonObj.error.type.includes("_api_error")) {
+      if (
+        jsonObj.error.code &&
+        Object.keys(API_SERVER_ERROR_CODES).includes(jsonObj.error.code)
+      ) {
+        // 替换OneAPI错误信息
+        jsonObj.error.message = API_SERVER_ERROR_CODES[jsonObj.error.code];
+      }
+      jsonObj.error.type = "api_error";
+    }
+    return JSON.stringify(jsonObj);
+  }
+
+  return "请求错误，稍后重试!";
+}
+
+interface uploadRequestOptions {
+  progressHandler: (event: ProgressEvent) => void;
+  // finalUrl: string;
+  // onSuccess?: (response: { custom_url: string }) => void;
+}
+
+export interface uploadToS3Options {
+  uploadFile: File;
+  onProgress?: (progress: { percent: number }) => void;
+  onSuccess?: (response: { custom_url: string }) => void;
+  onError?: (error: Error) => void;
+}
+
+async function makeUpload(
+  uploadUrl: string,
+  formData: FormData,
+  options: uploadRequestOptions,
+) {
+  const { progressHandler } = options;
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener("progress", progressHandler);
+    xhr.addEventListener("load", () => {
+      if (xhr.status === 204) {
+        resolve(xhr.responseText);
+      } else {
+        // 如何将错误信息传递到外部
+        reject(xhr.responseText);
+      }
+    });
+
+    xhr.addEventListener("error", (error) => {
+      // 监听错误
+      console.error("S3 Upload Error:", error);
+      showToast(Locale.Chat.Upload.Fail + ", error: " + error);
+      reject(error);
+    });
+
+    xhr.open("POST", uploadUrl);
+    xhr.send(formData);
+  });
+}
+
+export const uploadToS3 = async (options: uploadToS3Options) => {
+  const { uploadFile, onProgress, onSuccess, onError } = options;
+
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      filename: uploadFile.name,
+      contentType: uploadFile.type,
+    }),
+  });
+
+  if (response.ok) {
+    const { url, fields, fileKey } = await response.json();
+
+    const progressHandler = (event: ProgressEvent) => {
+      if (event.lengthComputable) {
+        let percent = (event.loaded / event.total) * 100;
+        percent = parseInt(percent.toFixed(2));
+        onProgress?.({ percent });
+      }
+    };
+
+    const formData = new FormData();
+    Object.entries(fields).forEach(([key, value]) => {
+      formData.append(key, value as string);
+    });
+    formData.append("file", uploadFile as Blob);
+
+    await makeUpload(url, formData, {
+      progressHandler: progressHandler,
+    })
+      .then((response) => {
+        onSuccess?.({ custom_url: removeTrailingSlash(url) + "/" + fileKey });
+      })
+      .catch((error) => {
+        onError?.(error);
+      });
+  } else {
+    showToast(Locale.Chat.Upload.FailGetPresignedUrl);
+  }
+};
+
+export const getBase64ByFile = (file: RcFile): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+// 判断文件是否是图片
+export function isImage(file: File) {
+  return file.type.startsWith("image");
+}
+
+// 根据路径判断是否是图片
+export function isImageUrl(url: string) {
+  return url.match(/\.(jpeg|jpg|gif|png|webp|bmp)$/i) != null;
+}
+
+export function FillAttachFileTemplate(
+  userInput: string = "",
+  attachFileUrls: string[],
+) {
+  if (userInput.length > 0) {
+    let attachInput = "";
+    // 将附件链接中每个值都加入到用户输入中
+    attachFileUrls.forEach((attachFileUrl) => {
+      let attachFileName = attachFileUrl.split("/").pop();
+      attachInput += "\n" + `[${attachFileName}](${attachFileUrl})`;
+    });
+    userInput += attachInput;
+  }
+  return userInput;
+}
+
+export function removeTrailingSlash(url: string) {
+  if (url.endsWith("/")) {
+    return url.slice(0, -1);
+  }
+  return url;
+}

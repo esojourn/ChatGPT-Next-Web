@@ -1,5 +1,12 @@
 import { Anthropic, ApiPath } from "@/app/constant";
-import { ChatOptions, getHeaders, LLMApi, SpeechOptions } from "../api";
+import {
+  AudioOptions,
+  AudioWithFileOptions,
+  ChatOptions,
+  getHeaders,
+  LLMApi,
+  SpeechOptions,
+} from "../api";
 import {
   useAccessStore,
   useAppConfig,
@@ -73,6 +80,15 @@ const ClaudeMapper = {
 const keys = ["claude-2, claude-instant-1"];
 
 export class ClaudeApi implements LLMApi {
+  audioSpeech(options: AudioOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranscriptions(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranslations(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   speech(options: SpeechOptions): Promise<ArrayBuffer> {
     throw new Error("Method not implemented.");
   }

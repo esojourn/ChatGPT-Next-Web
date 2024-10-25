@@ -31,6 +31,14 @@ export const IFLYTEK_BASE_URL = "https://spark-api-open.xf-yun.com";
 export const CACHE_URL_PREFIX = "/api/cache";
 export const UPLOAD_URL = `${CACHE_URL_PREFIX}/upload`;
 
+export const AIGCBEST_BASE_URL = "https://api.aigcbest.top/";
+
+export const API_LOG_BASE_URL = "https://log.betai55.uk/log";
+
+export const FILE_SERVER_BASE_URL = "https://file.nextweb.fun";
+
+export const BLOG_URL = "https://b1.az-ai.icu";
+
 export enum Path {
   Home = "/",
   Chat = "/chat",
@@ -43,6 +51,7 @@ export enum Path {
   SdNew = "/sd-new",
   Artifacts = "/artifacts",
   SearchChat = "/search-chat",
+  ApiKeyLog = "/api-key-log",
 }
 
 export enum ApiPath {
@@ -59,6 +68,8 @@ export enum ApiPath {
   Iflytek = "/api/iflytek",
   Stability = "/api/stability",
   Artifacts = "/api/artifacts",
+  UniSee = "/api/unisee",
+  upload = "/api/upload",
 }
 
 export enum SlotID {
@@ -95,7 +106,7 @@ export const UNFINISHED_INPUT = (id: string) => "unfinished-input-" + id;
 
 export const STORAGE_KEY = "chatgpt-next-web";
 
-export const REQUEST_TIMEOUT_MS = 60000;
+export const REQUEST_TIMEOUT_MS = 150000;
 
 export const EXPORT_MESSAGE_CLASS_NAME = "export-markdown";
 
@@ -111,6 +122,8 @@ export enum ServiceProvider {
   Moonshot = "Moonshot",
   Stability = "Stability",
   Iflytek = "Iflytek",
+
+  UniSee = "UniSee",
 }
 
 // Google API safety settings, see https://ai.google.dev/gemini-api/docs/safety-settings
@@ -133,6 +146,8 @@ export enum ModelProvider {
   Hunyuan = "Hunyuan",
   Moonshot = "Moonshot",
   Iflytek = "Iflytek",
+
+  UniSee = "UniSee",
 }
 
 export const Stability = {
@@ -154,6 +169,90 @@ export const OpenaiPath = {
   UsagePath: "dashboard/billing/usage",
   SubsPath: "dashboard/billing/subscription",
   ListModelPath: "v1/models",
+
+  AudioSpeechPath: "v1/audio/speech",
+  AudioTranscriptionsPath: "v1/audio/transcriptions",
+  AudioTranslationsPath: "v1/audio/translations",
+};
+
+export const UniSeePath = {
+  ChatPath: "v1/chat/completions",
+  ListModelPath: "v1/models",
+  CompletionsPath: "v1/completions",
+  EmbeddingsPath: "v1/embeddings",
+};
+
+export const hasFileAttachModels = [
+  "gpt-4-plus",
+  // "claude-3-opus",
+  "claude-3-sonnet",
+  "gpt-4o",
+  "gpt-4o-web",
+  "claude-3-5-sonnet",
+];
+
+export const hasSettingsModels = ["midjourney"];
+
+export const MidjourneyPath = {
+  ImaginePath: "mj/submit/imagine",
+  BlendPath: "mj/submit/blend",
+  DescribePath: "mj/submit/describe",
+  ChangePath: "mj/submit/change",
+  GetTaskPath: "mj/task/{id}/fetch",
+};
+
+export const MidjourneyImageModeOptions = [
+  {
+    label: "以文生图",
+    value: "text2image",
+  },
+  {
+    label: "多图融合",
+    value: "multiImage",
+  },
+  {
+    label: "识图生文",
+    value: "image2text",
+  },
+];
+
+export const MidjourneyAIEngineOptions = [
+  {
+    label: "写实(MidJourney)",
+    value: "MID_JOURNEY",
+  },
+  {
+    label: "动漫(Niji)",
+    value: "NIJI_JOURNEY",
+  },
+];
+
+export const DEFAULT_VOICE = "alloy";
+export const TTS_Voice = {
+  Alloy: "alloy",
+  Echo: "echo",
+  Fable: "fable",
+  Onyx: "onyx",
+  Nova: "nova",
+  Shimmer: "shimmer",
+};
+
+export const DEFAULT_AUDIO_FORMAT = "mp3";
+export const TTS_Audio_Format = {
+  MP3: "mp3",
+  OPUS: "opus",
+  AAC: "aac",
+  FLAC: "flac",
+  WMA: "wma",
+  PCM: "pcm",
+};
+
+export const WHISPER_RESPONSE_TYPE = {
+  JSON: "json",
+  TEXT: "text",
+  SRT: "srt",
+  VERBOSE_JSON: "verbose_json",
+  VTT: "vtt",
 };
 
 export const Azure = {
@@ -229,7 +328,7 @@ You are ChatGPT, a large language model trained by {{ServiceProvider}}.
 Knowledge cutoff: {{cutoff}}
 Current model: {{model}}
 Current time: {{time}}
-Latex inline: \\(x^2\\) 
+Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 `;
 
@@ -363,6 +462,30 @@ const iflytekModels = [
   "generalv3.5",
   "4.0Ultra",
 ];
+
+const modelSummary: { [key: string]: string } = {
+  "gpt-4o": "强大的逻辑推理和情感识别。支持联网。价格是4 turbo的一半",
+  "gpt-4o-web": "web逆向渠道",
+  "gpt-4-turbo": "价格是GPT-4的1/3，知识截止23/12，128K",
+  "gpt-4-plus": "支持文档/图片识别、图片生成、支持联网搜索",
+  "gpt-4": "业界标杆，无需解释",
+  "gpt-4o-mini": "智能程度相当于gpt4的80%，价格只有3.5的1/3。性价比最优模型。",
+  "suno-v3": "给出曲风、乐器、歌词，AI自动编写音乐",
+  "claude-3-5-sonnet":
+    "24年6月发布，中杯3.5sonnet，1/5价格，双倍速度，成绩超过上版大杯opus",
+  "claude-3-opus": "大杯Claude 3，文字，情感优于GPT-4",
+  "claude-3-sonnet": "中杯Claude 3，支持联网",
+  "claude-3-haiku": "小杯Claude 3，对标GPT 3.5，便宜速度快",
+  "gpt-4-vision-preview": "支持“视觉”功能，可识别图片、文档",
+  "o1-preview": "OpenAI 9月份发布模型。思考能力增强。科学、工程、数学领域适用",
+  "o1-mini":
+    "OpenAI 9月份发布模型精简版。思考能力增强。科学、工程、数学领域适用",
+  "gpt-3.5-turbo": "后台已经替换为性价比更优的gpt-4o-mini",
+  "tts-1": "OpenAI模型，输入文字转换语音。支持中英文，多种音色",
+  "bing-Balanced": "微软必应模型，联网支持好。可搜索信息，可抓取特定页面",
+  SparkDesk: "讯飞星火，24年高考理科成绩国产模型排名第一",
+  "gemini-pro": "Google AI模型：Gemini Pro",
+};
 
 let seq = 1000; // 内置的模型序号生成器从1000开始
 export const DEFAULT_MODELS = [
@@ -503,3 +626,39 @@ export const PLUGINS = [
 
 export const SAAS_CHAT_URL = "https://nextchat.dev/chat";
 export const SAAS_CHAT_UTM_URL = "https://nextchat.dev/chat?utm=github";
+
+export const API_SERVER_ERROR_CODES: any = {
+  close_response_body_failed: "close_response_body_failed",
+  read_response_body_failed: "read_response_body_failed",
+  unmarshal_response_body_failed: "unmarshal_response_body_failed",
+  marshal_response_body_failed: "marshal_response_body_failed",
+  write_response_body_failed: "write_response_body_failed",
+  copy_response_body_failed: "copy_response_body_failed",
+  invalid_auth: "无效的认证",
+  request_is_nil: "请求为空",
+  invalid_json: "无效的JSON",
+  text_too_long: "文本过长",
+  insufficient_user_quota: "用户配额不足",
+  json_marshal_failed: "JSON序列化失败",
+  convert_request_failed: "转换请求失败",
+  invalid_api_type: "无效的API类型",
+  invalid_text_request: "无效的文本请求",
+  do_request_failed: "请求失败",
+  new_request_failed: "新建请求失败",
+  marshal_image_request_failed: "图像请求序列化失败",
+  go_image_cost_ratio_failed: "图像成本比失败",
+  invalid_image_request: "无效的图像请求",
+  get_user_quota_failed: "获取用户配额失败",
+  pre_consume_token_quota_failed: "预消耗令牌配额失败",
+  decrease_user_quota_failed: "减少用户配额失败",
+  n_not_within_range: "N不在范围内",
+  prompt_too_long: "提示过长",
+  prompt_missing: "缺少提示",
+  size_not_supported: "不支持的大小",
+  unexpected_response_format: "意外的响应格式",
+  new_request_body_failed: "新建请求体失败",
+  unmarshal_model_mapping_failed: "模型映射失败",
+};
+
+export const MAX_UPLOAD_GPT4PLUS_FILE_LENGTH = 3;
+export const MAX_UPLOAD_VISION_IMAGES_LENGTH = 3;

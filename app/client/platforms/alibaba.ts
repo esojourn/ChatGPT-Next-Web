@@ -14,6 +14,8 @@ import {
   LLMModel,
   SpeechOptions,
   MultimodalContent,
+  AudioOptions,
+  AudioWithFileOptions,
 } from "../api";
 import Locale from "../../locales";
 import {
@@ -55,6 +57,15 @@ interface RequestPayload {
 }
 
 export class QwenApi implements LLMApi {
+  audioSpeech(options: AudioOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranscriptions(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  audioTranslations(options: AudioWithFileOptions): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   path(path: string): string {
     const accessStore = useAccessStore.getState();
 

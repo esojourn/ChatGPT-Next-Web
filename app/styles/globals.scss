@@ -42,6 +42,70 @@
   div:not(.no-dark) > svg {
     filter: invert(0.5);
   }
+
+  .css-var-r4{
+    --ant-color-bg-container: #000;
+    --ant-color-text: rgba(255, 255, 255, 0.85);
+    --ant-color-link: #1668dc;
+    --ant-color-primary: #1668dc;
+    --ant-color-bg-text-hover: rgba(255, 255, 255, 0.12);
+    .ant-table-container {
+      //--ant-pagination-item-active-bg:
+
+      --ant-table-header-bg: #1d1d1d;
+      --ant-table-header-color: rgba(255, 255, 255, 0.85);
+      --ant-table-header-sort-active-bg: #303030;
+      --ant-table-header-sort-hover-bg: #303030;
+      --ant-table-body-sort-bg: #1d1d1d;
+      --ant-table-row-hover-bg: #1d1d1d;
+      --ant-table-row-selected-bg: #111a2c;
+      --ant-table-row-selected-hover-bg: #112545;
+      --ant-table-row-expanded-bg: rgba(255, 255, 255, 0.04);
+      --ant-table-cell-padding-block: 16px;
+      --ant-table-cell-padding-inline: 16px;
+      --ant-table-cell-padding-block-md: 12px;
+      --ant-table-cell-padding-inline-md: 8px;
+      --ant-table-cell-padding-block-sm: 8px;
+      --ant-table-cell-padding-inline-sm: 8px;
+      --ant-table-border-color: #303030;
+      --ant-table-header-border-radius: 0;
+      --ant-table-footer-bg: #1d1d1d;
+      --ant-table-footer-color: rgba(255, 255, 255, 0.85);
+      --ant-table-cell-font-size: 14px;
+      --ant-table-cell-font-size-md: 14px;
+      --ant-table-cell-font-size-sm: 14px;
+      --ant-table-header-split-color: #303030;
+      --ant-table-fixed-header-sort-active-bg: #303030;
+      --ant-table-header-filter-hover-bg: rgba(255, 255, 255, 0.12);
+      --ant-table-filter-dropdown-menu-bg: #141414;
+      --ant-table-filter-dropdown-bg: #141414;
+      --ant-table-expand-icon-bg: #141414;
+      --ant-table-selection-column-width: 32px;
+      --ant-table-sticky-scroll-bar-bg: rgba(255, 255, 255, 0.25);
+      --ant-table-sticky-scroll-bar-border-radius: 100px;
+      --ant-table-expand-icon-margin-top: 2.5px;
+      --ant-table-header-icon-color: rgba(255, 255, 255, 0.29);
+      --ant-table-header-icon-hover-color: rgba(255, 255, 255, 0.55);
+      --ant-table-expand-icon-half-inner: 7px;
+      --ant-table-expand-icon-size: 17px;
+      --ant-table-expand-icon-scale: 0.9411764705882353;
+    }
+    .ant-pagination  {
+      --ant-pagination-item-bg: #141414;
+      --ant-pagination-item-active-bg: #141414;
+      --ant-pagination-item-link-bg: #141414;
+      --ant-pagination-item-active-color-disabled: rgba(255, 255, 255, 0.25);
+      --ant-pagination-item-active-bg-disabled: rgba(255, 255, 255, 0.18);
+      --ant-pagination-addon-bg: rgba(255, 255, 255, 0.04);
+      --ant-pagination-active-border-color: #1668dc;
+      --ant-pagination-hover-border-color: #3c89e8;
+      --ant-pagination-active-shadow: 0 0 0 2px rgba(0, 60, 180, 0.15);
+      --ant-pagination-error-active-shadow: 0 0 0 2px rgba(238, 38, 56, 0.11);
+      --ant-pagination-warning-active-shadow: 0 0 0 2px rgba(173, 107, 0, 0.15);
+      --ant-pagination-hover-bg: #141414;
+      --ant-pagination-active-bg: #141414;
+    }
+  }
 }
 
 .light {
@@ -272,7 +336,7 @@ div.math {
 
 pre {
   position: relative;
-  
+
   &:hover .copy-code-button {
     pointer-events: all;
     transform: translateX(0px);
@@ -326,9 +390,9 @@ pre {
       text-align: center;
       color: white;
       background: #464e4e;
-    } 
+    }
   }
-  
+
   .expanded {
     background-image: none;
   }
@@ -398,4 +462,14 @@ pre {
 
 .copyable {
   user-select: text;
+}
+
+.token-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 20px;
+  padding: 5px 10px 0 0;
+  font-size: 14px;
+  line-height: 16px;
 }

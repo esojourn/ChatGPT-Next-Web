@@ -1,0 +1,50 @@
+.chat-model-settings {
+    padding: 5px;
+    margin-bottom: 10px;
+    h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      line-height: 2;
+      border-bottom: 1px dashed #DFDFDF;
+    }
+    .ant-form-item {
+      .ant-form-item-label {
+        text-align: left;
+      }
+    }
+    .ant-form-item:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+  .chat-model-settings-actions {
+
+  }
+  .chat-model-settings {
+    .ant-form {
+      color: var(--black);
+      h3 {
+        border-bottom-color: var(--black);
+      }
+    }
+    .ant-form-item .ant-form-item-label >label {
+      color: var(--black);
+    }
+    .ant-radio-button-wrapper {
+      background: var(--white);
+      border: var(--border-in-light);
+      color: var(--black);
+    }
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled){
+      border-color: var(--primary);
+    }
+    .ant-radio-button-wrapper:not(:first-child)::before{
+      background: var(--border-in-light);
+    }
+    .ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select,
+    .ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload.ant-upload-select {
+      border-color: var(--black);
+      &:hover {
+        border-color: var(--primary);
+      }
+    }
+  }
