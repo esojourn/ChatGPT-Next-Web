@@ -387,7 +387,6 @@ export function getOperationId(operation: {
   );
 }
 
-<<<<<<< HEAD
 export function clientUpdate() {
   // this a wild for updating client app
   return window.__TAURI__?.updater
@@ -421,7 +420,7 @@ export function semverCompare(a: string, b: string) {
     caseFirst: "upper",
   });
 }
-=======
+
 export function filterMessageUrls(text: string): string {
   let jsonObj = JSON.parse(text);
   if (jsonObj?.error?.type) {
@@ -573,4 +572,3 @@ export function removeTrailingSlash(url: string) {
   }
   return url;
 }
->>>>>>> f431545b (Custom First Merge)

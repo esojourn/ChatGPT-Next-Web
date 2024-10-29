@@ -51,12 +51,7 @@ import Locale, {
   changeLang,
   getLang,
 } from "../locales";
-<<<<<<< HEAD
-import { copyToClipboard, clientUpdate, semverCompare } from "../utils";
-import Link from "next/link";
-=======
-import { copyToClipboard } from "../utils";
->>>>>>> f431545b (Custom First Merge)
+import { copyToClipboard, semverCompare } from "../utils";
 import {
   Anthropic,
   Azure,

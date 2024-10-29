@@ -2054,12 +2054,7 @@ function _Chat() {
                 );
               }
               setAttachFileUrls([]);
-              doSubmit(
-                tempUserInput,
-                attachImages,
-                audioURL,
-                additional_settings,
-              );
+              doSubmit(tempUserInput);
             }}
           />
         </label>
