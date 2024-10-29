@@ -47,6 +47,9 @@ import PluginIcon from "../icons/plugin.svg";
 import ShortcutkeyIcon from "../icons/shortcutkey.svg";
 import ReloadIcon from "../icons/reload.svg";
 
+import wxcodeSmall from "../images/wxcode-s.png";
+import TokenIcon from "../icons/token.svg";
+
 import {
   ChatMessage,
   SubmitKey,
@@ -72,6 +75,7 @@ import {
   isDalle3,
   showPlugins,
   safeLocalStorage,
+  FillAttachFileTemplate,
 } from "../utils";
 
 import { uploadImage as uploadImageRemote } from "@/app/utils/chat";
@@ -104,6 +108,8 @@ import {
   REQUEST_TIMEOUT_MS,
   UNFINISHED_INPUT,
   ServiceProvider,
+  modelHasSubTitle,
+  hasFileAttachModels,
 } from "../constant";
 import { Avatar } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
@@ -120,6 +126,9 @@ import { createTTSPlayer } from "../utils/audio";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "../utils/ms_edge_tts";
 
 import { isEmpty } from "lodash-es";
+import SpeechSettings from "@/app/components/speech-settings";
+import AudioPlayer from "@/app/components/audio-player";
+import AudioRecorder from "@/app/components/audio-recorder";
 
 const localStorage = safeLocalStorage();
 
@@ -482,7 +491,14 @@ export function ChatActions(props: {
     ServiceProvider.OpenAI;
   const allModels = useAllModels();
   const models = useMemo(() => {
-    const filteredModels = allModels.filter((m) => m.available);
+    const modelHasSubTitleKeys = Object.keys(modelHasSubTitle);
+    console.log(allModels, "hi");
+    const filteredModels = allModels.filter((m) => {
+      console.log(m.name, modelHasSubTitle.hasOwnProperty(m.name));
+      return m.available && modelHasSubTitle.hasOwnProperty(m.name);
+    });
+    console.log(filteredModels);
+
     const defaultModel = filteredModels.find((m) => m.isDefault);
 
     if (defaultModel) {
@@ -635,11 +651,10 @@ export function ChatActions(props: {
         <Selector
           defaultSelectedValue={`${currentModel}@${currentProviderName}`}
           items={models.map((m) => ({
-            title: `${m.displayName}${
-              m?.provider?.providerName
-                ? " (" + m?.provider?.providerName + ")"
-                : ""
-            }`,
+            title: `${m.displayName}`,
+            subTitle: modelHasSubTitle.hasOwnProperty(m.name)
+              ? modelHasSubTitle[m.name]?.subTitle
+              : "",
             value: `${m.name}@${m?.provider?.providerName}`,
           }))}
           onClose={() => setShowModelSelector(false)}
@@ -961,6 +976,19 @@ function _Chat() {
     100,
     { leading: true, trailing: true },
   );
+
+  const [tokenCount, setTokenCount] = useState(0);
+
+  // 上传图片的预览
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
+  const [audioURL, setAudioURL] = useState("");
+
+  // SEEU: add file attach support
+  const [attachFileUrls, setAttachFileUrls] = useState<string[]>([]);
+  const [attachFileNames, setAttachFileNames] = useState<string[]>([]);
 
   // auto grow input
   const [inputRows, setInputRows] = useState(2);
@@ -1599,6 +1627,10 @@ function _Chat() {
             {Locale.Chat.SubTitle(session.messages.length)}
           </div>
         </div>
+        <div className="qrcode-wrapper">
+          <img src={wxcodeSmall.src} />
+          wx: alz-ai
+        </div>
         <div className="window-actions">
           <div className="window-action-button">
             <IconButton
@@ -1927,7 +1959,16 @@ function _Chat() {
             attachImages.length != 0
               ? styles["chat-input-panel-inner-attach"]
               : ""
-          }`}
+          } ${
+            session.mask.modelConfig.model.startsWith("whisper-1")
+              ? styles["chat-input-panel-inner-audio"]
+              : ""
+          } ${
+            session.mask.modelConfig.model.startsWith("tts-1")
+              ? styles["chat-input-panel-inner-audio"]
+              : ""
+          }
+          `}
           htmlFor="chat-input"
         >
           <textarea
@@ -1971,12 +2012,55 @@ function _Chat() {
               })}
             </div>
           )}
+
+          {session.mask.modelConfig.model.startsWith("tts-1") && (
+            <div className={styles["audio-plugin-wrapper"]}>
+              <SpeechSettings />
+            </div>
+          )}
+
+          {session.mask.modelConfig.model.startsWith("whisper-1") && (
+            <div className={styles["audio-plugin-wrapper"]}>
+              {audioURL ? (
+                <AudioPlayer source={audioURL} />
+              ) : (
+                <div className={styles["audio-plugin-tips"]}>
+                  点击[开始录音]按钮进行录音
+                </div>
+              )}
+              <AudioRecorder setAudioURL={setAudioURL} />
+            </div>
+          )}
+          {tokenCount > 0 && (
+            <div className={"token-count"}>
+              {tokenCount} <TokenIcon />
+            </div>
+          )}
           <IconButton
             icon={<SendWhiteIcon />}
             text={Locale.Chat.Send}
             className={styles["chat-input-send"]}
             type="primary"
-            onClick={() => doSubmit(userInput)}
+            onClick={() => {
+              let tempUserInput = userInput.trim();
+              // 增加图片
+              let currentModel = session.mask.modelConfig.model;
+              let additional_settings = {};
+              // 如何模型包含图片附件，则需要将图片附件链接加入到用户输入中.
+              if (hasFileAttachModels.includes(currentModel)) {
+                tempUserInput = FillAttachFileTemplate(
+                  tempUserInput,
+                  attachFileUrls,
+                );
+              }
+              setAttachFileUrls([]);
+              doSubmit(
+                tempUserInput,
+                attachImages,
+                audioURL,
+                additional_settings,
+              );
+            }}
           />
         </label>
       </div>

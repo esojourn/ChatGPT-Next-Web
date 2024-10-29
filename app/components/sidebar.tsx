@@ -4,33 +4,37 @@ import styles from "./home.module.scss";
 
 import { IconButton } from "./button";
 import SettingsIcon from "../icons/settings.svg";
-import GithubIcon from "../icons/github.svg";
 import ChatGptIcon from "../icons/chatgpt.svg";
 import AddIcon from "../icons/add.svg";
 import DeleteIcon from "../icons/delete.svg";
 import MaskIcon from "../icons/mask.svg";
 import DragIcon from "../icons/drag.svg";
 import DiscoveryIcon from "../icons/discovery.svg";
+import BellIcon from "../icons/bell.svg";
+import AmbulanceIcon from "../icons/ambulance.svg";
 
 import Locale from "../locales";
 
 import { useAppConfig, useChatStore } from "../store";
 
 import {
+  BLOG_URL,
   DEFAULT_SIDEBAR_WIDTH,
   MAX_SIDEBAR_WIDTH,
   MIN_SIDEBAR_WIDTH,
   NARROW_SIDEBAR_WIDTH,
   Path,
   PLUGINS,
-  REPO_URL,
 } from "../constant";
 
 import { Link, useNavigate } from "react-router-dom";
 import { isIOS, useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { showConfirm, Selector } from "./ui-lib";
-import { showNotification } from "@/app/components/notification";
+import {
+  NotificationSummary,
+  showNotification,
+} from "@/app/components/notification";
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
@@ -190,6 +194,36 @@ export function SideBarHeader(props: {
   );
 }
 
+export function SideBarHeaderWithNotification(props: {
+  title?: string | React.ReactNode;
+  logo?: React.ReactNode;
+  children?: React.ReactNode;
+  shouldNarrow?: boolean;
+}) {
+  const { title, logo, children, shouldNarrow } = props;
+  return (
+    <Fragment>
+      <div
+        className={`${styles["sidebar-header"]} ${
+          shouldNarrow ? styles["sidebar-header-narrow"] : ""
+        }`}
+        data-tauri-drag-region
+      >
+        <div className={styles["sidebar-title-container"]}>
+          <div className={styles["sidebar-title"]} data-tauri-drag-region>
+            {title}
+          </div>
+          <div className={styles["sidebar-sub-title"]}>
+            <NotificationSummary showNotification={showNotification} />
+          </div>
+        </div>
+        <div className={styles["sidebar-logo"] + " no-dark"}>{logo}</div>
+      </div>
+      {children}
+    </Fragment>
+  );
+}
+
 export function SideBarBody(props: {
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
@@ -246,9 +280,8 @@ export function SideBar(props: { className?: string }) {
       shouldNarrow={shouldNarrow}
       {...props}
     >
-      <SideBarHeader
-        title="NextChat"
-        subTitle="Build your own AI assistant."
+      <SideBarHeaderWithNotification
+        title="阿兹海默GPT"
         logo={<ChatGptIcon />}
         shouldNarrow={shouldNarrow}
       >
@@ -290,7 +323,7 @@ export function SideBar(props: { className?: string }) {
             }}
           />
         )}
-      </SideBarHeader>
+      </SideBarHeaderWithNotification>
       <SideBarBody
         onClick={(e) => {
           if (e.target === e.currentTarget) {
@@ -314,6 +347,16 @@ export function SideBar(props: { className?: string }) {
               />
             </div>
             <div className={styles["sidebar-action"]}>
+              <a
+                title="Notification"
+                onClick={() => {
+                  showNotification();
+                }}
+              >
+                <IconButton icon={<BellIcon />} shadow />
+              </a>
+            </div>
+            <div className={styles["sidebar-action"]}>
               <Link to={Path.Settings}>
                 <IconButton
                   aria={Locale.Settings.Title}
@@ -323,10 +366,15 @@ export function SideBar(props: { className?: string }) {
               </Link>
             </div>
             <div className={styles["sidebar-action"]}>
-              <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+              <a
+                title={"Blog"}
+                href={BLOG_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <IconButton
                   aria={Locale.Export.MessageFromChatGPT}
-                  icon={<GithubIcon />}
+                  icon={<AmbulanceIcon />}
                   shadow
                 />
               </a>
