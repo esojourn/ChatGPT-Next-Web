@@ -391,6 +391,11 @@ const openaiModels = [
   "dall-e-3",
   "o1-mini",
   "o1-preview",
+  "gpt-4o-web",
+  "gpt-4-plus",
+  "gpt-4-vision-preview",
+  "tts-1",
+  "bing-Balanced",
 ];
 
 const googleModels = [
@@ -398,6 +403,7 @@ const googleModels = [
   "gemini-1.5-pro-latest",
   "gemini-1.5-flash-latest",
   "gemini-pro-vision",
+  "gemini-pro",
 ];
 
 const anthropicModels = [
@@ -408,6 +414,10 @@ const anthropicModels = [
   "claude-3-opus-20240229",
   "claude-3-haiku-20240307",
   "claude-3-5-sonnet-20240620",
+  "claude-3-5-sonnet",
+  "claude-3-opus",
+  "claude-3-sonnet",
+  "claude-3-haiku",
 ];
 
 const baiduModels = [
@@ -461,30 +471,93 @@ const iflytekModels = [
   "pro-128k",
   "generalv3.5",
   "4.0Ultra",
+  "SparkDesk",
 ];
 
-const modelSummary: { [key: string]: string } = {
-  "gpt-4o": "强大的逻辑推理和情感识别。支持联网。价格是4 turbo的一半",
-  "gpt-4o-web": "web逆向渠道",
-  "gpt-4-turbo": "价格是GPT-4的1/3，知识截止23/12，128K",
-  "gpt-4-plus": "支持文档/图片识别、图片生成、支持联网搜索",
-  "gpt-4": "业界标杆，无需解释",
-  "gpt-4o-mini": "智能程度相当于gpt4的80%，价格只有3.5的1/3。性价比最优模型。",
-  "suno-v3": "给出曲风、乐器、歌词，AI自动编写音乐",
-  "claude-3-5-sonnet":
-    "24年6月发布，中杯3.5sonnet，1/5价格，双倍速度，成绩超过上版大杯opus",
-  "claude-3-opus": "大杯Claude 3，文字，情感优于GPT-4",
-  "claude-3-sonnet": "中杯Claude 3，支持联网",
-  "claude-3-haiku": "小杯Claude 3，对标GPT 3.5，便宜速度快",
-  "gpt-4-vision-preview": "支持“视觉”功能，可识别图片、文档",
-  "o1-preview": "OpenAI 9月份发布模型。思考能力增强。科学、工程、数学领域适用",
-  "o1-mini":
-    "OpenAI 9月份发布模型精简版。思考能力增强。科学、工程、数学领域适用",
-  "gpt-3.5-turbo": "后台已经替换为性价比更优的gpt-4o-mini",
-  "tts-1": "OpenAI模型，输入文字转换语音。支持中英文，多种音色",
-  "bing-Balanced": "微软必应模型，联网支持好。可搜索信息，可抓取特定页面",
-  SparkDesk: "讯飞星火，24年高考理科成绩国产模型排名第一",
-  "gemini-pro": "Google AI模型：Gemini Pro",
+export const modelHasSubTitle: {
+  [key: string]: {
+    displayName: string;
+    subTitle: string;
+  };
+} = {
+  "gpt-4o": {
+    displayName: "gpt-4o",
+    subTitle: "强大的逻辑推理和情感识别。支持联网。价格是4 turbo的一半",
+  },
+  "gpt-4o-web": {
+    displayName: "gpt-4o-web",
+    subTitle: "web逆向渠道",
+  },
+  "gpt-4-turbo": {
+    displayName: "gpt-4-turbo",
+    subTitle: "价格是GPT-4的1/3，知识截止23/12，128K",
+  },
+  "gpt-4-plus": {
+    displayName: "gpt-4-plus",
+    subTitle: "支持文档/图片识别、图片生成、支持联网搜索",
+  },
+  "gpt-4": {
+    displayName: "gpt-4",
+    subTitle: "业界标杆，无需解释",
+  },
+  "gpt-4o-mini": {
+    displayName: "gpt-4o-mini",
+    subTitle: "智能程度相当于gpt4的80%，价格只有3.5的1/3。性价比最优模型。",
+  },
+  "suno-v3": {
+    displayName: "suno-v3",
+    subTitle: "给出曲风、乐器、歌词，AI自动编写音乐",
+  },
+  "claude-3-5-sonnet": {
+    displayName: "claude-3-5-sonnet",
+    subTitle:
+      "24年6月发布，中杯3.5sonnet，1/5价格，双倍速度，成绩超过上版大杯opus",
+  },
+  "claude-3-opus": {
+    displayName: "claude-3-opus",
+    subTitle: "大杯Claude 3，文字，情感优于GPT-4",
+  },
+  "claude-3-sonnet": {
+    displayName: "claude-3-sonnet",
+    subTitle: "中杯Claude 3，支持联网",
+  },
+  "claude-3-haiku": {
+    displayName: "claude-3-haiku",
+    subTitle: "小杯Claude 3，对标GPT 3.5，便宜速度快",
+  },
+  "gpt-4-vision-preview": {
+    displayName: "gpt-4-vision-preview",
+    subTitle: "支持“视觉”功能，可识别图片、文档",
+  },
+  "o1-preview": {
+    displayName: "o1-preview",
+    subTitle: "OpenAI 9月份发布模型。思考能力增强。科学、工程、数学领域适用",
+  },
+  "o1-mini": {
+    displayName: "o1-mini",
+    subTitle:
+      "OpenAI 9月份发布模型精简版。思考能力增强。科学、工程、数学领域适用",
+  },
+  "gpt-3.5-turbo": {
+    displayName: "gpt-3.5-turbo",
+    subTitle: "后台已经替换为性价比更优的gpt-4o-mini",
+  },
+  "tts-1": {
+    displayName: "tts-1",
+    subTitle: "OpenAI模型，输入文字转换语音。支持中英文，多种音色",
+  },
+  "bing-Balanced": {
+    displayName: "bing-Balanced",
+    subTitle: "微软必应模型，联网支持好。可搜索信息，可抓取特定页面",
+  },
+  SparkDesk: {
+    displayName: "SparkDesk",
+    subTitle: "讯飞星火，24年高考理科成绩国产模型排名第一",
+  },
+  "gemini-pro": {
+    displayName: "gemini-pro",
+    subTitle: "Google AI模型：Gemini Pro",
+  },
 };
 
 let seq = 1000; // 内置的模型序号生成器从1000开始
@@ -500,17 +573,17 @@ export const DEFAULT_MODELS = [
       sorted: 1, // 这里是固定的，确保顺序与之前内置的版本一致
     },
   })),
-  ...openaiModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "azure",
-      providerName: "Azure",
-      providerType: "azure",
-      sorted: 2,
-    },
-  })),
+  // ...openaiModels.map((name) => ({
+  //   name,
+  //   available: true,
+  //   sorted: seq++,
+  //   provider: {
+  //     id: "azure",
+  //     providerName: "Azure",
+  //     providerType: "azure",
+  //     sorted: 2,
+  //   },
+  // })),
   ...googleModels.map((name) => ({
     name,
     available: true,
