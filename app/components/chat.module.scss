@@ -446,6 +446,7 @@
 .chat-message-item-image {
   width: 100%;
   margin-top: 10px;
+  max-width: 400px;
 }
 
 .chat-message-item-images {
@@ -595,6 +596,7 @@
 }
 
 .chat-input-panel-inner {
+  position: relative;
   cursor: text;
   display: flex;
   flex: 1;
@@ -604,6 +606,10 @@
 
 .chat-input-panel-inner-attach {
   padding-bottom: 80px;
+}
+.chat-input-panel-inner-audio {
+  background: var(--bar-color);
+  padding-bottom: 60px;
 }
 
 .chat-input-panel-inner:has(.chat-input:focus) {
@@ -633,8 +639,8 @@
   color: white;
 
   position: absolute;
-  right: 30px;
-  bottom: 32px;
+  right: 10px;
+  bottom: 12px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -693,4 +699,47 @@
 .shortcut-key span {
   font-size: 12px;
   color: var(--black);
+}
+
+.donate-wrapper {
+  padding: 36px 0 0;
+}
+
+.donate-description {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.donate-code-images {
+  img {
+    width: 150px;
+    display: inline-block;
+    margin-right: 15px;
+  }
+}
+.audio-plugin-wrapper {
+  width: 100%;
+  height: 40px;
+  padding: 0 190px 0 10px;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  bottom: 10px;
+  --plyr-control-spacing: 6px;
+  --plyr-audio-controls-background: #eee;
+  --plyr-line-height: 1.5;
+  .audio-plugin-tips {
+    font-size: 14px;
+    line-height: 40px;
+  }
+}
+.audio-recorder-button {
+  position: absolute;
+  right: 90px;
+  bottom: 2px;
+  background: #f0ad4e !important;
+  color: #fff;
+}
+.audio-recorder-button.recording {
+  background: #d9534f !important;
 }

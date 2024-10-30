@@ -11,6 +11,11 @@ import { ConfigProvider, Table, theme as antdTheme } from "antd";
 import type { GetProp, TableProps } from "antd";
 import { useAppConfig } from "@/app/store";
 import { getCSSVar } from "@/app/utils";
+import type {
+  SorterResult,
+  TableCurrentDataSource,
+} from "antd/es/table/interface";
+import { FilterValue } from "antd/lib/table/interface";
 
 type ColumnsType<T> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<
@@ -90,7 +95,7 @@ export function ApiKeyLog() {
 
   useEffect(() => {
     // Fetch data from API based on currentPage
-    fetchData();
+    fetchData().then((r) => {});
   }, [JSON.stringify(tableParams)]);
 
   useEffect(() => {
@@ -130,7 +135,12 @@ export function ApiKeyLog() {
       });
   };
 
-  const handleTableChange: TableProps["onChange"] = (pagination) => {
+  const handleTableChange: TableProps<DataType>["onChange"] = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<DataType> | SorterResult<DataType>[],
+    extra: TableCurrentDataSource<DataType>,
+  ) => {
     setCurrentPage(pagination.current || 1);
     setTableParams({
       pagination,

@@ -8,6 +8,7 @@ import React, {
   Fragment,
   RefObject,
 } from "react";
+import { encode } from "gpt-tokenizer";
 
 import SendWhiteIcon from "../icons/send-white.svg";
 import BrainIcon from "../icons/brain.svg";
@@ -47,6 +48,7 @@ import PluginIcon from "../icons/plugin.svg";
 import ShortcutkeyIcon from "../icons/shortcutkey.svg";
 import ReloadIcon from "../icons/reload.svg";
 
+import PreviewIcon from "../icons/eye.svg";
 import wxcodeSmall from "../images/wxcode-s.png";
 import TokenIcon from "../icons/token.svg";
 
@@ -75,7 +77,6 @@ import {
   isDalle3,
   showPlugins,
   safeLocalStorage,
-  FillAttachFileTemplate,
 } from "../utils";
 
 import { uploadImage as uploadImageRemote } from "@/app/utils/chat";
@@ -109,7 +110,6 @@ import {
   UNFINISHED_INPUT,
   ServiceProvider,
   modelHasSubTitle,
-  hasFileAttachModels,
 } from "../constant";
 import { Avatar } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
@@ -129,6 +129,8 @@ import { isEmpty } from "lodash-es";
 import SpeechSettings from "@/app/components/speech-settings";
 import AudioPlayer from "@/app/components/audio-player";
 import AudioRecorder from "@/app/components/audio-recorder";
+
+import Image from "next/image";
 
 const localStorage = safeLocalStorage();
 
@@ -872,6 +874,24 @@ export function DeleteImageButton(props: { deleteImage: () => void }) {
   );
 }
 
+function PreviewImageButton(props: { previewImage: () => void }) {
+  return (
+    <div className={styles["preview-image"]} onClick={props.previewImage}>
+      <PreviewIcon />
+    </div>
+  );
+}
+
+export function DeleteAttachFileButton(props: {
+  deleteAttachFile: () => void;
+}) {
+  return (
+    <div className={styles["delete-image"]} onClick={props.deleteAttachFile}>
+      <DeleteIcon />
+    </div>
+  );
+}
+
 export function ShortcutKeyModal(props: { onClose: () => void }) {
   const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
   const shortcuts = [
@@ -984,7 +1004,7 @@ function _Chat() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
-  const [audioURL, setAudioURL] = useState("");
+  const [audioUrl, setAudioUrl] = useState("");
 
   // SEEU: add file attach support
   const [attachFileUrls, setAttachFileUrls] = useState<string[]>([]);
@@ -1027,9 +1047,18 @@ function _Chat() {
 
   // only search prompts when user input is short
   const SEARCH_TEXT_LIMIT = 30;
+
+  const resetUserInput = () => {
+    setUserInput("");
+    setTokenCount(0);
+  };
+
   const onInput = (text: string) => {
     setUserInput(text);
     const n = text.trim().length;
+
+    let tokens = encode(text.trim());
+    setTokenCount(tokens.length);
 
     // clear search results
     if (n === 0) {
@@ -1049,18 +1078,35 @@ function _Chat() {
     if (userInput.trim() === "" && isEmpty(attachImages)) return;
     const matchCommand = chatCommands.match(userInput);
     if (matchCommand.matched) {
-      setUserInput("");
+      // setUserInput("");
+      resetUserInput();
       setPromptHints([]);
       matchCommand.invoke();
       return;
     }
+
+    // let tempUserInput = userInput.trim();
+    // // 增加图片
+    // let currentModel = session.mask.modelConfig.model;
+    // let additional_settings = {};
+    // // 如何模型包含图片附件，则需要将图片附件链接加入到用户输入中.
+    // if (hasFileAttachModels.includes(currentModel)) {
+    //   tempUserInput = FillAttachFileTemplate(
+    //     tempUserInput,
+    //     attachFileUrls,
+    //   );
+    // }
+
     setIsLoading(true);
     chatStore
-      .onUserInput(userInput, attachImages)
+      .onUserInput(userInput, attachImages, attachFileUrls, audioUrl)
       .then(() => setIsLoading(false));
     setAttachImages([]);
+    setAttachFileUrls([]);
+    setAudioUrl("");
     chatStore.setLastInput(userInput);
-    setUserInput("");
+    // setUserInput("");
+    resetUserInput();
     setPromptHints([]);
     if (!isMobileScreen) inputRef.current?.focus();
     setAutoScroll(true);
@@ -1074,7 +1120,8 @@ function _Chat() {
       if (matchedChatCommand.matched) {
         // if user is selecting a chat command, just trigger it
         matchedChatCommand.invoke();
-        setUserInput("");
+        // setUserInput("");
+        resetUserInput();
       } else {
         // or fill the prompt
         setUserInput(prompt.content);
@@ -1438,6 +1485,9 @@ function _Chat() {
     const mayBeUnfinishedInput = localStorage.getItem(key);
     if (mayBeUnfinishedInput && userInput.length === 0) {
       setUserInput(mayBeUnfinishedInput);
+      const tokens = encode(mayBeUnfinishedInput.trim());
+      setTokenCount(tokens.length);
+
       localStorage.removeItem(key);
     }
 
@@ -1628,7 +1678,7 @@ function _Chat() {
           </div>
         </div>
         <div className="qrcode-wrapper">
-          <img src={wxcodeSmall.src} />
+          <Image src={wxcodeSmall.src} alt={"微信"} width={54} height={54} />
           wx: alz-ai
         </div>
         <div className="window-actions">
@@ -1902,7 +1952,7 @@ function _Chat() {
                       >
                         {getMessageImages(message).map((image, index) => {
                           return (
-                            <img
+                            <Image
                               className={
                                 styles["chat-message-item-image-multi"]
                               }
@@ -1999,6 +2049,15 @@ function _Chat() {
                     style={{ backgroundImage: `url("${image}")` }}
                   >
                     <div className={styles["attach-image-mask"]}>
+                      {/* TODO: 增加进度判断，上传完成时，显示预览弹窗 */}
+                      {/* TODO: 有文件在上传时，不能点击发送 */}
+                      <PreviewImageButton
+                        previewImage={() => {
+                          setPreviewImage(image);
+                          setPreviewTitle("预览");
+                          setPreviewOpen(true);
+                        }}
+                      />
                       <DeleteImageButton
                         deleteImage={() => {
                           setAttachImages(
@@ -2021,18 +2080,18 @@ function _Chat() {
 
           {session.mask.modelConfig.model.startsWith("whisper-1") && (
             <div className={styles["audio-plugin-wrapper"]}>
-              {audioURL ? (
-                <AudioPlayer source={audioURL} />
+              {audioUrl ? (
+                <AudioPlayer source={audioUrl} />
               ) : (
                 <div className={styles["audio-plugin-tips"]}>
                   点击[开始录音]按钮进行录音
                 </div>
               )}
-              <AudioRecorder setAudioURL={setAudioURL} />
+              <AudioRecorder setAudioURL={setAudioUrl} />
             </div>
           )}
           {tokenCount > 0 && (
-            <div className={"token-count"}>
+            <div className={"token-count"} title={"Token count"}>
               {tokenCount} <TokenIcon />
             </div>
           )}
@@ -2042,19 +2101,7 @@ function _Chat() {
             className={styles["chat-input-send"]}
             type="primary"
             onClick={() => {
-              let tempUserInput = userInput.trim();
-              // 增加图片
-              let currentModel = session.mask.modelConfig.model;
-              let additional_settings = {};
-              // 如何模型包含图片附件，则需要将图片附件链接加入到用户输入中.
-              if (hasFileAttachModels.includes(currentModel)) {
-                tempUserInput = FillAttachFileTemplate(
-                  tempUserInput,
-                  attachFileUrls,
-                );
-              }
-              setAttachFileUrls([]);
-              doSubmit(tempUserInput);
+              doSubmit(userInput);
             }}
           />
         </label>

@@ -1,4 +1,8 @@
-import { getMessageTextContent, trimTopic } from "../utils";
+import {
+  FillAttachFileTemplate,
+  getMessageTextContent,
+  trimTopic,
+} from "../utils";
 
 import { indexedDBStorage } from "@/app/utils/indexedDB-storage";
 import { nanoid } from "nanoid";
@@ -19,6 +23,8 @@ import {
   SUMMARIZE_MODEL,
   GEMINI_SUMMARIZE_MODEL,
   ServiceProvider,
+  DEFAULT_VOICE,
+  DEFAULT_AUDIO_FORMAT,
 } from "../constant";
 import Locale, { getLang } from "../locales";
 import { isDalle3, safeLocalStorage } from "../utils";
@@ -82,6 +88,12 @@ export interface ChatSession {
   clearContextIndex?: number;
 
   mask: Mask;
+
+  settings: {
+    voice: string;
+    responseFormat: string;
+    playbackSpeed: number;
+  };
 }
 
 export const DEFAULT_TOPIC = Locale.Store.DefaultTopic;
@@ -105,6 +117,11 @@ function createEmptySession(): ChatSession {
     lastSummarizeIndex: 0,
 
     mask: createEmptyMask(),
+    settings: {
+      voice: DEFAULT_VOICE,
+      responseFormat: DEFAULT_AUDIO_FORMAT,
+      playbackSpeed: 1,
+    },
   };
 }
 
@@ -361,12 +378,22 @@ export const useChatStore = createPersistStore(
         get().summarizeSession();
       },
 
-      async onUserInput(content: string, attachImages?: string[]) {
+      async onUserInput(
+        content: string,
+        attachImages?: string[],
+        attachFileUrls?: string[],
+        audioUrl?: string,
+        additionalSettings?: any,
+      ) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
 
         // get current model
         const currentModel = modelConfig.model;
+
+        if (attachFileUrls && attachFileUrls.length > 0) {
+          content = FillAttachFileTemplate(content, attachFileUrls);
+        }
 
         const userContent = fillTemplateWith(content, modelConfig);
         console.log("[User Input] after template: ", userContent);
@@ -383,6 +410,9 @@ export const useChatStore = createPersistStore(
               image_url: { url },
             })),
           ];
+        }
+
+        if (audioUrl) {
         }
 
         let userMessage: ChatMessage = createMessage({

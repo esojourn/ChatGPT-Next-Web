@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSideConfig } from "../config/server";
-import { OPENAI_BASE_URL, ServiceProvider } from "../constant";
+import { DEFAULT_MODELS, OPENAI_BASE_URL, ServiceProvider } from "../constant";
 import { isModelAvailableInServer, collectModelTable } from "../utils/model";
 import { cloudflareAIGatewayUrl } from "../utils/cloudflare";
 

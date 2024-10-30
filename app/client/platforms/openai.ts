@@ -46,7 +46,9 @@ import {
   getMessageTextContent,
   isVisionModel,
   isDalle3 as _isDalle3,
+  uploadToS3,
 } from "@/app/utils";
+import { showToast } from "@/app/components/ui-lib";
 
 export interface OpenAIListModelResponse {
   object: string;
@@ -83,15 +85,6 @@ export interface DalleRequestPayload {
 
 export class ChatGPTApi implements LLMApi {
   private disableListModels = true;
-  audioSpeech(options: AudioOptions): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  audioTranscriptions(options: AudioWithFileOptions): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  audioTranslations(options: AudioWithFileOptions): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
 
   path(path: string): string {
     const accessStore = useAccessStore.getState();
@@ -540,11 +533,11 @@ export class ChatGPTApi implements LLMApi {
         let audioFileUrl = "";
         await uploadToS3({
           uploadFile: audioFile,
-          onSuccess: (url) => {
+          onSuccess: (url: any) => {
             audioFileUrl = url.custom_url;
             showToast(Locale.Chat.Upload.Success);
           },
-          onError: (error) => {
+          onError: (error: any) => {
             // console.error("[Request] failed to upload audio file", error.name +':'+error.message);
             // console.log("Upload failed:", error);
             // 服务器端错误..

@@ -14,6 +14,7 @@ import {
   LLMApi,
   LLMModel,
   LLMUsage,
+  SpeechOptions,
 } from "../api";
 import Locale from "../../locales";
 import {
@@ -47,6 +48,9 @@ interface MidjourneyRequestPayloadInterface {
 }
 
 export class UniSeeSApi implements LLMApi {
+  speech(options: SpeechOptions): Promise<ArrayBuffer> {
+    throw new Error("Method not implemented.");
+  }
   private disableListModels = true;
   private logPrefix = "[UniSee] ---> ";
 
@@ -172,7 +176,8 @@ export class UniSeeSApi implements LLMApi {
         if (res.ok) {
           const resJson = await res.json();
           message = formatMjMessage(resJson, lastMessageContent);
-          options.onFinish(message, resJson);
+          // options.onFinish(message, resJson);
+          options.onFinish(message);
         } else {
           options.onFinish(res.statusText);
         }
@@ -332,10 +337,12 @@ export class UniSeeSApi implements LLMApi {
       name: m.id,
       subTitle: "",
       available: true,
+      sorted: 0,
       provider: {
         id: "unisee",
         providerName: "UniSee",
         providerType: "unisee",
+        sorted: 0,
       },
     }));
   }

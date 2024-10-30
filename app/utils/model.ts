@@ -60,7 +60,6 @@ export function collectModelTable(
     modelTable[`${m.name}@${m?.provider?.id}`] = {
       ...m,
       displayName: m.name, // 'provider' is copied over if it exists
-      description: m.description,
     };
   });
 

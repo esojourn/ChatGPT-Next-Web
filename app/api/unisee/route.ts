@@ -3,8 +3,8 @@ import { getServerSideConfig } from "@/app/config/server";
 import { ModelProvider, UniSeePath, MidjourneyPath } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "../../auth";
-import { requestUniSee } from "../../common";
+import { auth } from "../auth";
+import { requestUniSee } from "../common";
 
 const ALLOWED_PATH = new Set(Object.values(UniSeePath));
 // 增加

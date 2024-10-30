@@ -4,6 +4,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { showToast } from "@/app/components/ui-lib";
 import Locale from "@/app/locales";
 import { UploadRequestOption as RcCustomRequestOptions } from "rc-upload/lib/interface";
+import Image from "next/image";
 
 interface AdditionalSettingsGpt4AllProps {
   isFileAttachUploading: boolean;
@@ -170,7 +171,12 @@ const AdditionalSettingsGpt4All = (props: AdditionalSettingsGpt4AllProps) => {
           footer={null}
           onCancel={handleCancel}
         >
-          <img alt="example" style={{ width: "100%" }} src={previewImage} />
+          <Image
+            alt="example"
+            layout="responsive"
+            src={previewImage}
+            style={{ width: "100%" }}
+          />
         </Modal>
       </Form.Item>
     </Form>

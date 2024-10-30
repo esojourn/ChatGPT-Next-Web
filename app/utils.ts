@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { showToast } from "./components/ui-lib";
 import Locale from "./locales";
 import { RequestMessage } from "./client/api";
-import { ServiceProvider } from "./constant";
+import { ServiceProvider, API_SERVER_ERROR_CODES } from "./constant";
 // import { fetch as tauriFetch, ResponseType } from "@tauri-apps/api/http";
 import { fetch as tauriStreamFetch } from "./utils/stream";
+import { RcFile } from "antd/lib/upload";
 
 export function trimTopic(topic: string) {
   // Fix an issue where double quotes still show in the Indonesian language

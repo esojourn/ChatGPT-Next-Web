@@ -7,6 +7,7 @@ import qrcode from "@/app/images/qrcode128.png";
 import plus1 from "@/app/images/240301a.png";
 import plus2 from "@/app/images/240301b.png";
 import { Component } from "react";
+import Image from "next/image";
 
 export class NotificationSummary extends Component<{ showNotification: any }> {
   render() {
@@ -53,7 +54,13 @@ export function showNotification() {
     children: (
       <div className={"notification"}>
         <div style={{ float: "right" }}>
-          <img src={wxcode.src} style={{ margin: "0 10px" }} alt="" />
+          <Image
+            src={wxcode}
+            style={{ margin: "0 10px" }}
+            alt=""
+            width={128}
+            height={128}
+          />
         </div>
         <p>
           24/09/13：第一时间开通o1-preview，o1-mini OpenAI
@@ -108,7 +115,13 @@ export function showNotification() {
           一次购买，支持所有模型。自行在设置中选择使用
           <ul>
             <div style={{ float: "right" }}>
-              <img src={wxcode.src} style={{ margin: "0 10px" }} alt="" />
+              <Image
+                src={wxcode}
+                style={{ margin: "0 10px" }}
+                alt=""
+                width={128}
+                height={128}
+              />
             </div>
             <li>15元，购买5USD额度，有效期2个月</li>
             <li>30元，购买10USD额度，有效期4个月</li>
@@ -278,7 +291,7 @@ export function showNotification() {
         <p>
           微信ID：alz-ai
           <br />
-          <img src={wxcode.src} alt="" />
+          <Image src={wxcode} alt="" width={128} height={128} />
         </p>
         <br />
         <br />
@@ -292,17 +305,22 @@ export function showNotification() {
         <p>
           再比如我上传一本书的PDF文件。然后请AI根据书中的知识进行推理，并且给出信息来源出处。效果也很好。
         </p>
-        <img src={plus1.src} style={{ width: "90%" }} alt="" />
+        <Image
+          src={plus1}
+          style={{ width: "90%", height: "auto" }}
+          alt=""
+          layout="responsive"
+        />
         <h3>2. 图片生成</h3>
         <p>
           目前已经支持Dall-E，优点是对指令执行准确，缺点是艺术性不如MJ。已经做了自动翻译，可以直接用中文指令。
         </p>
         <p>为防止封号，不适宜的内容已经做了过滤，就不要尝试了。</p>
-        <img src={plus2.src} style={{ width: "90%" }} alt="" />
+        <Image src={plus2} style={{ width: "90%", height: "auto" }} alt="" />
         <p>
           微信ID：alz-ai
           <br />
-          <img src={wxcode.src} alt="" />
+          <Image src={wxcode} alt="" width={128} height={128} />
         </p>
         <hr />
         <p>23/10/25</p>
@@ -313,10 +331,10 @@ export function showNotification() {
           - 独享30美金，标准会员279元/月 不限量
           <br />
           <br />
-          <img
-            src={mjsample.src}
+          <Image
+            src={mjsample}
             className={styles["mjsample"]}
-            width={"90%"}
+            style={{ width: "90%", height: "auto" }}
             alt=""
           />
           <br />
@@ -351,7 +369,7 @@ export function showNotification() {
           开始给自己定了一个小目标，公众号关注1000人就不做了。没想到在风口，这个目标太小了，瞬间达成。在我犹豫关闭时，一位学生朋友的打赏，让我决心继续走下去。
         </p>
         <p>
-          <img src={chat.src} width="30%" alt="" />
+          <Image src={chat} style={{ width: "30%", height: "auto" }} alt="" />
         </p>
         <h1>结语</h1>
         <p>
@@ -366,7 +384,11 @@ export function showNotification() {
         <p>
           “阿兹海默”，在公众号和小红书中继续分享，有缘再会！
           <br />
-          <img src={qrcode.src} width="100px" alt="" />
+          <Image
+            src={qrcode}
+            style={{ width: "100px", height: "auto" }}
+            alt=""
+          />
         </p>
         <p>
           <i>
@@ -385,7 +407,7 @@ export function showNotification() {
           <br />
           微信ID：alz-ai
           <br />
-          <img src={wxcode.src} alt="" />
+          <Image src={wxcode} alt="" width={128} height={128} />
         </p>
         <hr />
         <p>7/22</p>

@@ -19,6 +19,7 @@ import {
   MidjourneyImageModeOptions,
 } from "../constant";
 import { useMobileScreen } from "@/app/utils";
+import Image from "next/image";
 
 interface AdditionalSettingsMidjourneyProps {
   midjourneyAIEngine: string;
@@ -137,7 +138,11 @@ const AdditionalSettingsMidjourney = (
               footer={null}
               onCancel={handleCancel}
             >
-              <img alt="example" style={{ width: "100%" }} src={previewImage} />
+              <Image
+                alt="example"
+                style={{ width: "100%" }}
+                src={previewImage}
+              />
             </Modal>
           </Form.Item>
         </Col>

@@ -569,6 +569,7 @@ const en: LocaleType = {
       },
       Engine: "TTS Engine",
     },
+    SeeMore: "See More",
   },
   Store: {
     DefaultTopic: "New Conversation",
@@ -848,7 +849,6 @@ const en: LocaleType = {
       Quota: "Quota",
     },
   },
-  SeeMore: "See More",
 };
 
 export default en;
