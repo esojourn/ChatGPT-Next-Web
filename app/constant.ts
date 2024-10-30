@@ -183,9 +183,9 @@ export const UniSeePath = {
   EmbeddingsPath: "v1/embeddings",
 };
 
-export const hasFileAttachModels = [
+// 拥有文件附件的模型。
+export const hasAttachFileModels = [
   "gpt-4-plus",
-  // "claude-3-opus",
   "claude-3-sonnet",
   "gpt-4o",
   "gpt-4o-web",

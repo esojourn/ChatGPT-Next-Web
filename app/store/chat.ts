@@ -1,8 +1,4 @@
-import {
-  FillAttachFileTemplate,
-  getMessageTextContent,
-  trimTopic,
-} from "../utils";
+import { getMessageTextContent, trimTopic } from "../utils";
 
 import { indexedDBStorage } from "@/app/utils/indexedDB-storage";
 import { nanoid } from "nanoid";
@@ -378,22 +374,12 @@ export const useChatStore = createPersistStore(
         get().summarizeSession();
       },
 
-      async onUserInput(
-        content: string,
-        attachImages?: string[],
-        attachFileUrls?: string[],
-        audioUrl?: string,
-        additionalSettings?: any,
-      ) {
+      async onUserInput(content: string, attachImages?: string[]) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
 
         // get current model
         const currentModel = modelConfig.model;
-
-        if (attachFileUrls && attachFileUrls.length > 0) {
-          content = FillAttachFileTemplate(content, attachFileUrls);
-        }
 
         const userContent = fillTemplateWith(content, modelConfig);
         console.log("[User Input] after template: ", userContent);
@@ -410,9 +396,6 @@ export const useChatStore = createPersistStore(
               image_url: { url },
             })),
           ];
-        }
-
-        if (audioUrl) {
         }
 
         let userMessage: ChatMessage = createMessage({

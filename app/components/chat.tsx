@@ -34,6 +34,7 @@ import ConfirmIcon from "../icons/confirm.svg";
 import CloseIcon from "../icons/close.svg";
 import CancelIcon from "../icons/cancel.svg";
 import ImageIcon from "../icons/image.svg";
+import UploadIcon from "../icons/upload.svg";
 
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
@@ -77,6 +78,9 @@ import {
   isDalle3,
   showPlugins,
   safeLocalStorage,
+  FillAttachFileTemplate,
+  isImageUrl,
+  uploadToS3,
 } from "../utils";
 
 import { uploadImage as uploadImageRemote } from "@/app/utils/chat";
@@ -110,6 +114,8 @@ import {
   UNFINISHED_INPUT,
   ServiceProvider,
   modelHasSubTitle,
+  hasAttachFileModels,
+  MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
 } from "../constant";
 import { Avatar } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
@@ -126,6 +132,7 @@ import { createTTSPlayer } from "../utils/audio";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "../utils/ms_edge_tts";
 
 import { isEmpty } from "lodash-es";
+import { Modal as AntdModal } from "antd";
 import SpeechSettings from "@/app/components/speech-settings";
 import AudioPlayer from "@/app/components/audio-player";
 import AudioRecorder from "@/app/components/audio-recorder";
@@ -459,6 +466,12 @@ export function ChatActions(props: {
   uploadImage: () => void;
   setAttachImages: (images: string[]) => void;
   setUploading: (uploading: boolean) => void;
+  attachFileUrls: string[];
+  setAttachFileUrls: (urls: string[]) => void;
+  attachFileNames: string[];
+  setAttachFileNames: (names: string[]) => void;
+  fileUploading: boolean;
+  setFileUploading: (fileUploading: boolean) => void;
   showPromptModal: () => void;
   scrollToBottom: () => void;
   showPromptHints: () => void;
@@ -524,6 +537,91 @@ export function ChatActions(props: {
   const [showModelSelector, setShowModelSelector] = useState(false);
   const [showPluginSelector, setShowPluginSelector] = useState(false);
   const [showUploadImage, setShowUploadImage] = useState(false);
+
+  const [showUploadFile, setShowUploadFile] = useState(false);
+
+  function uploadAttachFile(
+    attachFileUrls: string[],
+    setAttachFileUrls: (fileUrls: string[]) => void,
+    attachFileNames: string[],
+    setAttachFileNames: (fileNames: string[]) => void,
+    setFileUploading: (fileUploading: boolean) => void,
+  ): void {
+    (async () => {
+      // 上传文件的Urls数组
+      const fileUrls: string[] = [];
+      fileUrls.push(...attachFileUrls);
+
+      const fileNames: string[] = [];
+      fileNames.push(...attachFileNames);
+
+      fileUrls.push(
+        ...(await new Promise<string[]>((res, rej) => {
+          const fileInput = document.createElement("input");
+          fileInput.type = "file";
+          let fileAccept =
+            "image/png, image/jpeg, image/webp, image/heic, image/heif";
+          // 增加支持txt,PDF,word,excel,ppt等文件
+          fileAccept +=
+            ", application/pdf, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain";
+          // 增加支持xlsx,docx,pptx等文件
+          fileAccept +=
+            ", application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation";
+          fileInput.accept = fileAccept;
+          fileInput.multiple = true;
+          fileInput.onchange = (event: any) => {
+            setFileUploading(true);
+
+            const files = event.target.files;
+            const awsUrls: string[] = [];
+            for (let i = 0; i < files.length; i++) {
+              const file = event.target.files[i];
+
+              uploadToS3({
+                uploadFile: file,
+                onProgress: (progress) => {
+                  console.log("uploading...", progress);
+                },
+                onSuccess: (url) => {
+                  setFileUploading(false);
+                  awsUrls.push(url.custom_url);
+                  fileNames.push(file.name);
+                  if (
+                    awsUrls.length === MAX_UPLOAD_GPT4PLUS_FILE_LENGTH ||
+                    awsUrls.length === files.length
+                  ) {
+                    res(awsUrls);
+                  }
+                },
+                onError: (error) => {
+                  setFileUploading(false);
+                  rej(error);
+                },
+              });
+            }
+          };
+          fileInput.click();
+        })),
+      );
+
+      const filesLength = fileUrls.length;
+      // 限定最多上传3个文件
+      if (filesLength > MAX_UPLOAD_GPT4PLUS_FILE_LENGTH) {
+        fileUrls.splice(
+          MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
+          filesLength - MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
+        );
+      }
+      if (fileNames.length > MAX_UPLOAD_GPT4PLUS_FILE_LENGTH) {
+        fileNames.splice(
+          MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
+          filesLength - MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
+        );
+      }
+      setAttachFileUrls(fileUrls);
+      setAttachFileNames(fileNames);
+    })();
+  }
 
   const [showSizeSelector, setShowSizeSelector] = useState(false);
   const [showQualitySelector, setShowQualitySelector] = useState(false);
@@ -591,13 +689,6 @@ export function ChatActions(props: {
         />
       )}
 
-      {showUploadImage && (
-        <ChatAction
-          onClick={props.uploadImage}
-          text={Locale.Chat.InputActions.UploadImage}
-          icon={props.uploading ? <LoadingButtonIcon /> : <ImageIcon />}
-        />
-      )}
       <ChatAction
         onClick={nextTheme}
         text={Locale.Chat.InputActions.Theme[theme]}
@@ -679,6 +770,30 @@ export function ChatActions(props: {
               showToast(model);
             }
           }}
+        />
+      )}
+
+      {showUploadImage && (
+        <ChatAction
+          onClick={props.uploadImage}
+          text={Locale.Chat.InputActions.UploadImage}
+          icon={props.uploading ? <LoadingButtonIcon /> : <ImageIcon />}
+        />
+      )}
+
+      {showUploadFile && (
+        <ChatAction
+          onClick={() =>
+            uploadAttachFile(
+              props.attachFileUrls,
+              props.setAttachFileUrls,
+              props.attachFileNames,
+              props.setAttachFileNames,
+              props.setFileUploading,
+            )
+          }
+          text={Locale.Chat.InputActions.UploadFile}
+          icon={props.fileUploading ? <LoadingButtonIcon /> : <UploadIcon />}
         />
       )}
 
@@ -1004,11 +1119,16 @@ function _Chat() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
+  const previewHandleCancel = () => {
+    setPreviewOpen(false);
+  };
+
   const [audioUrl, setAudioUrl] = useState("");
 
   // SEEU: add file attach support
   const [attachFileUrls, setAttachFileUrls] = useState<string[]>([]);
   const [attachFileNames, setAttachFileNames] = useState<string[]>([]);
+  const [fileUploading, setFileUploading] = useState(false);
 
   // auto grow input
   const [inputRows, setInputRows] = useState(2);
@@ -1085,21 +1205,19 @@ function _Chat() {
       return;
     }
 
-    // let tempUserInput = userInput.trim();
-    // // 增加图片
-    // let currentModel = session.mask.modelConfig.model;
-    // let additional_settings = {};
-    // // 如何模型包含图片附件，则需要将图片附件链接加入到用户输入中.
-    // if (hasFileAttachModels.includes(currentModel)) {
-    //   tempUserInput = FillAttachFileTemplate(
-    //     tempUserInput,
-    //     attachFileUrls,
-    //   );
-    // }
+    userInput = userInput.trim();
+
+    let currentModel = session.mask.modelConfig.model;
+    if (hasAttachFileModels.includes(currentModel)) {
+      // if current model support file attach, fill the template
+      if (attachFileUrls && attachFileUrls.length > 0) {
+        userInput = FillAttachFileTemplate(userInput, attachFileUrls);
+      }
+    }
 
     setIsLoading(true);
     chatStore
-      .onUserInput(userInput, attachImages, attachFileUrls, audioUrl)
+      .onUserInput(userInput, attachImages)
       .then(() => setIsLoading(false));
     setAttachImages([]);
     setAttachFileUrls([]);
@@ -1986,6 +2104,12 @@ function _Chat() {
           uploadImage={uploadImage}
           setAttachImages={setAttachImages}
           setUploading={setUploading}
+          attachFileUrls={attachFileUrls}
+          setAttachFileUrls={setAttachFileUrls}
+          attachFileNames={attachFileNames}
+          setAttachFileNames={setAttachFileNames}
+          fileUploading={fileUploading}
+          setFileUploading={setFileUploading}
           showPromptModal={() => setShowPromptModal(true)}
           scrollToBottom={scrollToBottom}
           hitBottom={hitBottom}
@@ -2069,6 +2193,62 @@ function _Chat() {
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {attachFileUrls.length != 0 && (
+            <div className={styles["attach-file-wrapper"]}>
+              {attachFileUrls.map((attachFileUrl, index) => {
+                // 是图片的时候，使用背景。不是图片的时候使用图标
+                let attachStyle = isImageUrl(attachFileUrl)
+                  ? {
+                      backgroundImage: `url("${attachFileUrl}")`,
+                    }
+                  : {};
+
+                let attachClassName = isImageUrl(attachFileUrl)
+                  ? ""
+                  : styles["attach-file"];
+
+                return (
+                  <div
+                    key={index}
+                    className={`${styles["attach-image"]} ${attachClassName}`}
+                    style={attachStyle}
+                  >
+                    <div className={styles["attach-image-mask"]}>
+                      {isImageUrl(attachFileUrl) && (
+                        <PreviewImageButton
+                          previewImage={() => {
+                            setPreviewImage(attachFileUrl);
+                            setPreviewTitle("预览");
+                            setPreviewOpen(true);
+                          }}
+                        />
+                      )}
+                      <DeleteAttachFileButton
+                        deleteAttachFile={() => {
+                          setAttachFileUrls(
+                            attachFileUrls.filter((_, i) => i !== index),
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              <AntdModal
+                open={previewOpen}
+                title={previewTitle}
+                footer={null}
+                onCancel={previewHandleCancel}
+              >
+                <img
+                  alt="example"
+                  style={{ width: "100%" }}
+                  src={previewImage}
+                />
+              </AntdModal>
             </div>
           )}
 

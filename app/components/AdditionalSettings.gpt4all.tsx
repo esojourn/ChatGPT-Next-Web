@@ -7,18 +7,18 @@ import { UploadRequestOption as RcCustomRequestOptions } from "rc-upload/lib/int
 import Image from "next/image";
 
 interface AdditionalSettingsGpt4AllProps {
-  isFileAttachUploading: boolean;
-  fileAttachUrl: string | null;
-  setIsFileAttachUploading: (isUploading: boolean) => void;
-  setFileAttachUrl: (url: string) => void;
+  isAttachFileUploading: boolean;
+  attachFileUrl: string | null;
+  setIsAttachFileUploading: (isUploading: boolean) => void;
+  setAttachFileUrl: (url: string) => void;
 }
 
 const AdditionalSettingsGpt4All = (props: AdditionalSettingsGpt4AllProps) => {
   const {
-    isFileAttachUploading,
-    fileAttachUrl,
-    setIsFileAttachUploading,
-    setFileAttachUrl,
+    isAttachFileUploading,
+    attachFileUrl,
+    setIsAttachFileUploading,
+    setAttachFileUrl,
   } = props;
 
   // 上传图片
@@ -60,7 +60,7 @@ const AdditionalSettingsGpt4All = (props: AdditionalSettingsGpt4AllProps) => {
     setFileList(newFileList);
     if (newFileList.length > 0) {
       let file = newFileList[0];
-      setIsFileAttachUploading(true);
+      setIsAttachFileUploading(true);
     }
   };
 
@@ -84,10 +84,10 @@ const AdditionalSettingsGpt4All = (props: AdditionalSettingsGpt4AllProps) => {
   );
 
   useEffect(() => {
-    if (!fileAttachUrl) {
+    if (!attachFileUrl) {
       setFileList([]);
     }
-  }, [fileAttachUrl]);
+  }, [attachFileUrl]);
 
   // 首先，确保你已经定义了 showToast 和 Locale 相关的逻辑。
 
@@ -136,7 +136,7 @@ const AdditionalSettingsGpt4All = (props: AdditionalSettingsGpt4AllProps) => {
         if (xhr.status === 204) {
           onSuccess?.({ custom_url: `${url}${fileKey}` });
 
-          setFileAttachUrl(`${url}${fileKey}`);
+          setAttachFileUrl(`${url}${fileKey}`);
         } else {
           throw new Error(`Upload failed with status: ${xhr.status}`);
         }
