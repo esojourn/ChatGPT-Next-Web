@@ -5,6 +5,16 @@
     "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/dalle/openapi.json"
   },
   {
+    "id": "flux",
+    "name": "Flux",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/flux/openapi.json"
+  },
+  {
+    "id": "wolframalpha",
+    "name": "WolframAlpha",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/wolframalpha/openapi.json"
+  },
+  {
     "id": "arxivsearch",
     "name": "ArxivSearch",
     "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/arxivsearch/openapi.json"
@@ -13,5 +23,35 @@
     "id": "duckduckgolite",
     "name": "DuckDuckGoLiteSearch",
     "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/duckduckgolite/openapi.json"
+  },
+  {
+    "id": "gapier",
+    "name": "Gapier",
+    "schema": "https://a.gapier.com/free"
+  },
+  {
+    "id": "webpilot",
+    "name": "Webpilot",
+    "schema": "https://gpts.webpilot.ai/gpts-openapi.yaml"
+  },
+  {
+    "id": "fastgpt",
+    "name": "FastGPT",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/fastgpt/openapi.json"
+  },
+  {
+    "id": "npmsearch",
+    "name": "NPM Registry Search API",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/npmsearch/openapi.json"
+  },
+  {
+    "id": "codeinterpreterapi",
+    "name": "CodeInterpreter",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/codeinterpreterapi/openapi.json"
+  },
+  {
+    "id": "chatpdf",
+    "name": "Chat PDF GPT",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/chatpdf/openapi.json"
   }
 ]
