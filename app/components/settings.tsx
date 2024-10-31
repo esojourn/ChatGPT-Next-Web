@@ -1626,10 +1626,13 @@ export function Settings() {
 
           {!accessStore.hideUserApiKey && (
             <>
+              {/*
               {useCustomConfigComponent}
+              */}
 
               {accessStore.useCustomConfig && (
                 <>
+                  {/*
                   <ListItem
                     title={Locale.Settings.Access.Provider.Title}
                     subTitle={Locale.Settings.Access.Provider.SubTitle}
@@ -1652,8 +1655,10 @@ export function Settings() {
                       ))}
                     </Select>
                   </ListItem>
+                  */}
 
                   {openAIConfigComponent}
+                  {/*
                   {azureConfigComponent}
                   {googleConfigComponent}
                   {anthropicConfigComponent}
@@ -1664,6 +1669,7 @@ export function Settings() {
                   {moonshotConfigComponent}
                   {stabilityConfigComponent}
                   {lflytekConfigComponent}
+                  */}
                 </>
               )}
             </>

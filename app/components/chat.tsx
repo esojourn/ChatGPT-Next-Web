@@ -81,6 +81,7 @@ import {
   FillAttachFileTemplate,
   isImageUrl,
   uploadToS3,
+  isSupportAttachFileModel,
 } from "../utils";
 
 import { uploadImage as uploadImageRemote } from "@/app/utils/chat";
@@ -114,7 +115,6 @@ import {
   UNFINISHED_INPUT,
   ServiceProvider,
   modelHasSubTitle,
-  hasAttachFileModels,
   MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
 } from "../constant";
 import { Avatar } from "./emoji";
@@ -646,6 +646,14 @@ export function ChatActions(props: {
       props.setUploading(false);
     }
 
+    const showAttach = isSupportAttachFileModel(currentModel);
+    setShowUploadFile(showAttach);
+    if (!showAttach) {
+      props.setAttachFileUrls([]);
+      props.setAttachFileNames([]);
+      props.setFileUploading(false);
+    }
+
     // if current model is not available
     // switch to first available model
     const isUnavailableModel = !models.some((m) => m.name === currentModel);
@@ -773,7 +781,7 @@ export function ChatActions(props: {
         />
       )}
 
-      {showUploadImage && (
+      {!showUploadFile && showUploadImage && (
         <ChatAction
           onClick={props.uploadImage}
           text={Locale.Chat.InputActions.UploadImage}
@@ -1208,7 +1216,7 @@ function _Chat() {
     userInput = userInput.trim();
 
     let currentModel = session.mask.modelConfig.model;
-    if (hasAttachFileModels.includes(currentModel)) {
+    if (isSupportAttachFileModel(currentModel)) {
       // if current model support file attach, fill the template
       if (attachFileUrls && attachFileUrls.length > 0) {
         userInput = FillAttachFileTemplate(userInput, attachFileUrls);

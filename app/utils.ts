@@ -252,6 +252,7 @@ export function getMessageImages(message: RequestMessage): string[] {
   return urls;
 }
 
+// 仅支持图片
 export function isVisionModel(model: string) {
   // Note: This is a better way using the TypeScript feature instead of `&&` or `||` (ts v5.5.0-dev.20240314 I've been using)
 
@@ -269,6 +270,13 @@ export function isVisionModel(model: string) {
   return (
     visionKeywords.some((keyword) => model.includes(keyword)) || isGpt4Turbo
   );
+}
+
+// 即支持图片，也支持文件
+export function isSupportAttachFileModel(model: string) {
+  const modelKeywords = ["gpt-4-plus", "gpt-4-vision-preview"];
+
+  return modelKeywords.some((keyword) => model.includes(keyword));
 }
 
 export function isDalle3(model: string) {
