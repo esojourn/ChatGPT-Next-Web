@@ -634,6 +634,20 @@
 
 .chat-input:focus {}
 
+.chat-input-attach {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--white);
+  box-shadow: var(--shadow);
+  width: 40px;
+  height: 40px;
+}
 .chat-input-send {
   background-color: var(--primary);
   color: white;

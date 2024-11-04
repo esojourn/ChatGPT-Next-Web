@@ -9,7 +9,7 @@ const cn = {
     // \\ 1️⃣ 想要零配置开箱即用，[点击这里立刻开启对话 🚀](${SAAS_CHAT_UTM_URL})
     // \\ 2️⃣ 如果你想消耗自己的 OpenAI 资源，点击[这里](/#/settings)修改设置 ⚙️`
     // \ 3️⃣ 如果你想消耗自己的 OpenAI 资源，点击[这里](/#/settings)修改设置 ⚙️
-    Unauthorized: isApp ? `联系管理员解决:` : `联系管理员解决:`,
+    Unauthorized: isApp ? `有什么可以帮你的吗?` : `有什么可以帮你的吗?`,
   },
   Auth: {
     Return: "返回",
@@ -120,6 +120,13 @@ const cn = {
     Settings: {
       Voice: "语音",
       responseFormat: "音频格式",
+    },
+    Attach: "附件",
+    AttachPanel: {
+      Title: "选择附件",
+      Recent: "最近上传",
+      Upload: "上传新文件",
+      DropMessage: "点击或拖拽文件到这里上传",
     },
   },
   Export: {

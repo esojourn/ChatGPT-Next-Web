@@ -136,6 +136,7 @@ import { Modal as AntdModal } from "antd";
 import SpeechSettings from "@/app/components/speech-settings";
 import AudioPlayer from "@/app/components/audio-player";
 import AudioRecorder from "@/app/components/audio-recorder";
+import { AttachPanel } from "./AttachPanel";
 
 import Image from "next/image";
 
@@ -1137,6 +1138,8 @@ function _Chat() {
   const [attachFileUrls, setAttachFileUrls] = useState<string[]>([]);
   const [attachFileNames, setAttachFileNames] = useState<string[]>([]);
   const [fileUploading, setFileUploading] = useState(false);
+
+  const [showAttachPanel, setShowAttachPanel] = useState(false);
 
   // auto grow input
   const [inputRows, setInputRows] = useState(2);
@@ -2284,6 +2287,14 @@ function _Chat() {
             </div>
           )}
           <IconButton
+            icon={<UploadIcon />}
+            text={Locale.Chat.Attach}
+            className={styles["chat-input-attach"]}
+            onClick={() => {
+              setShowAttachPanel(true);
+            }}
+          />
+          <IconButton
             icon={<SendWhiteIcon />}
             text={Locale.Chat.Send}
             className={styles["chat-input-send"]}
@@ -2292,6 +2303,16 @@ function _Chat() {
               doSubmit(userInput);
             }}
           />
+          {showAttachPanel && (
+            <AttachPanel
+              onClose={() => setShowAttachPanel(false)}
+              onSelect={(url) => {
+                // TODO: 处理选中的文件
+                setAttachFileUrls([...attachFileUrls, url]);
+                setShowAttachPanel(false);
+              }}
+            />
+          )}
         </label>
       </div>
 
