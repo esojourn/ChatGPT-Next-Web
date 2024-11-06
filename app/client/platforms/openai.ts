@@ -382,7 +382,9 @@ export class ChatGPTApi implements LLMApi {
         .padStart(2, "0")}`;
     const ONE_DAY = 1 * 24 * 60 * 60 * 1000;
     const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    // const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    // 将开始日志设定为2020-01-01
+    const startOfMonth = new Date(2020, 0, 1);
     const startDate = formatDate(startOfMonth);
     const endDate = formatDate(new Date(Date.now() + ONE_DAY));
 

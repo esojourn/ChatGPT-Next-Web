@@ -1682,9 +1682,16 @@ export function Settings() {
                 showUsage
                   ? loadingUsage
                     ? Locale.Settings.Usage.IsChecking
-                    : Locale.Settings.Usage.SubTitle(
-                        usage?.used ?? "[?]",
-                        usage?.subscription ?? "[?]",
+                    : // : Locale.Settings.Usage.SubTitle(
+                      //     usage?.used ?? "[?]",
+                      //     usage?.subscription ?? "[?]",
+                      //   )
+                      Locale.Settings.Usage.Remaining(
+                        usage?.subscription && usage?.used
+                          ? usage.subscription < usage.used
+                            ? "0"
+                            : (usage.subscription - usage.used).toFixed(2)
+                          : "[?]",
                       )
                   : Locale.Settings.Usage.NoAccess
               }

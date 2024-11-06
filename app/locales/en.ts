@@ -128,6 +128,13 @@ const en: LocaleType = {
       Voice: "Voice",
       responseFormat: "Audio Format",
     },
+    Attach: "",
+    AttachPanel: {
+      Title: "Attachment",
+      Recent: "Recent",
+      Upload: "Upload",
+      DropMessage: "Drop files here or click to upload",
+    },
   },
   Export: {
     Title: "Export Messages",
@@ -328,6 +335,8 @@ const en: LocaleType = {
       SubTitle(used: any, total: any) {
         return `Used this month $${used}, subscription $${total}`;
       },
+      Remaining: (remaining: any) =>
+        `Remaining $${remaining} (Due to cache, balance statistics may be delayed by 1 minute)`,
       IsChecking: "Checking...",
       Check: "Check",
       NoAccess: "Enter API Key to check balance",

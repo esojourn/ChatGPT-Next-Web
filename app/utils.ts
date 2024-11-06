@@ -6,6 +6,7 @@ import { ServiceProvider, API_SERVER_ERROR_CODES } from "./constant";
 // import { fetch as tauriFetch, ResponseType } from "@tauri-apps/api/http";
 import { fetch as tauriStreamFetch } from "./utils/stream";
 import { RcFile } from "antd/lib/upload";
+import { AttachFile } from "./types/attach";
 
 export function trimTopic(topic: string) {
   // Fix an issue where double quotes still show in the Indonesian language
@@ -250,6 +251,21 @@ export function getMessageImages(message: RequestMessage): string[] {
     }
   }
   return urls;
+}
+
+// 获取消息中的附件文件
+// TODO: 支持图片，没有支持非图片文件
+export function getMessageAttachFiles(message: RequestMessage): AttachFile[] {
+  if (typeof message.content === "string") {
+    return [];
+  }
+  const urls: string[] = [];
+  for (const c of message.content) {
+    if (c.type === "image_url") {
+      urls.push(c.image_url?.url ?? "");
+    }
+  }
+  return [];
 }
 
 // 仅支持图片
@@ -556,19 +572,26 @@ export function isImage(file: File) {
 
 // 根据路径判断是否是图片
 export function isImageUrl(url: string) {
+  // 检查是否是 base64 编码的图片
+  const base64Pattern = /^data:image\/(jpeg|jpg|gif|png|webp|bmp);base64,/i;
+  if (base64Pattern.test(url)) {
+    return true;
+  }
+  // 检查是否是图片 URL
   return url.match(/\.(jpeg|jpg|gif|png|webp|bmp)$/i) != null;
 }
 
 export function FillAttachFileTemplate(
   userInput: string = "",
-  attachFileUrls: string[],
+  attachFiles: AttachFile[],
 ) {
   if (userInput.length > 0) {
     let attachInput = "";
     // 将附件链接中每个值都加入到用户输入中
-    attachFileUrls.forEach((attachFileUrl) => {
-      let attachFileName = attachFileUrl.split("/").pop();
-      attachInput += "\n" + `[${attachFileName}](${attachFileUrl})`;
+    attachFiles.forEach((attachFile) => {
+      if (attachFile.type === "file") {
+        attachInput += "\n" + `[${attachFile.name}](${attachFile.url})`;
+      }
     });
     userInput += attachInput;
   }

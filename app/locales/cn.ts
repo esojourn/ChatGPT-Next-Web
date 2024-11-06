@@ -325,6 +325,8 @@ const cn = {
       SubTitle(used: any, total: any) {
         return `本月已使用 $${used}，订阅总额 $${total}。（可能因缓存原因更新延迟，'使用日志'可实时查询消费明细）`;
       },
+      Remaining: (remaining: any) =>
+        `剩余 $${remaining} (因缓存原因，余额统计存在1分钟延迟)`,
       IsChecking: "正在检查…",
       Check: "重新检查",
       NoAccess: "输入 API Key 或访问密码查看余额",

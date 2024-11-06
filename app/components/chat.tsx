@@ -33,8 +33,8 @@ import EditIcon from "../icons/rename.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 import CloseIcon from "../icons/close.svg";
 import CancelIcon from "../icons/cancel.svg";
-import ImageIcon from "../icons/image.svg";
-import UploadIcon from "../icons/upload.svg";
+import AttachmentUploadIcon from "../icons/attachment-upload.svg";
+import FileCheckIcon from "../icons/file-check.svg";
 
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
@@ -78,10 +78,10 @@ import {
   isDalle3,
   showPlugins,
   safeLocalStorage,
-  FillAttachFileTemplate,
   isImageUrl,
   uploadToS3,
   isSupportAttachFileModel,
+  FillAttachFileTemplate,
 } from "../utils";
 
 import { uploadImage as uploadImageRemote } from "@/app/utils/chat";
@@ -139,6 +139,7 @@ import AudioRecorder from "@/app/components/audio-recorder";
 import { AttachPanel } from "./AttachPanel";
 
 import Image from "next/image";
+import { AttachFile } from "../types/attach";
 
 const localStorage = safeLocalStorage();
 
@@ -431,6 +432,70 @@ export function ChatAction(props: {
   );
 }
 
+export function ChatActionWithText(props: {
+  text: string;
+  icon: JSX.Element;
+  onClick: () => void;
+}) {
+  const iconRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState({
+    full: 16,
+    icon: 16,
+  });
+
+  function updateWidth() {
+    if (!iconRef.current || !textRef.current) return;
+    const getWidth = (dom: HTMLDivElement) => dom.getBoundingClientRect().width;
+    const textWidth = getWidth(textRef.current);
+    const iconWidth = getWidth(iconRef.current);
+    setWidth({
+      full: textWidth + iconWidth,
+      icon: iconWidth,
+    });
+  }
+
+  // 添加 useEffect 在组件挂载后运行一次 updateWidth
+  useEffect(() => {
+    // 使用 requestAnimationFrame 确保 DOM 已完全渲染
+    requestAnimationFrame(() => {
+      updateWidth();
+    });
+  }, [props.text]);
+
+  return (
+    <div
+      className={`${styles["chat-input-action"]} clickable`}
+      onClick={() => {
+        props.onClick();
+      }}
+      onMouseEnter={updateWidth}
+      onTouchStart={updateWidth}
+      style={
+        {
+          "--icon-width": `${width.icon}px`,
+          "--full-width": `${width.full}px`,
+          width: "var(--full-width)",
+        } as React.CSSProperties
+      }
+    >
+      <div ref={iconRef} className={styles["icon"]}>
+        {props.icon}
+      </div>
+      <div
+        className={styles["text"]}
+        ref={textRef}
+        style={{
+          opacity: 1,
+          transform: "translate(0, 0)",
+        }}
+      >
+        {props.text}
+      </div>
+    </div>
+  );
+}
+
 function useScrollToBottom(
   scrollRef: RefObject<HTMLDivElement>,
   detach: boolean = false,
@@ -467,8 +532,8 @@ export function ChatActions(props: {
   uploadImage: () => void;
   setAttachImages: (images: string[]) => void;
   setUploading: (uploading: boolean) => void;
-  attachFileUrls: string[];
-  setAttachFileUrls: (urls: string[]) => void;
+  attachFiles: AttachFile[];
+  setAttachFiles: (files: AttachFile[]) => void;
   attachFileNames: string[];
   setAttachFileNames: (names: string[]) => void;
   fileUploading: boolean;
@@ -476,6 +541,7 @@ export function ChatActions(props: {
   showPromptModal: () => void;
   scrollToBottom: () => void;
   showPromptHints: () => void;
+  tokenCount: number;
   hitBottom: boolean;
   uploading: boolean;
   setShowShortcutKeyModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -508,12 +574,9 @@ export function ChatActions(props: {
   const allModels = useAllModels();
   const models = useMemo(() => {
     const modelHasSubTitleKeys = Object.keys(modelHasSubTitle);
-    console.log(allModels, "hi");
     const filteredModels = allModels.filter((m) => {
-      console.log(m.name, modelHasSubTitle.hasOwnProperty(m.name));
       return m.available && modelHasSubTitle.hasOwnProperty(m.name);
     });
-    console.log(filteredModels);
 
     const defaultModel = filteredModels.find((m) => m.isDefault);
 
@@ -650,7 +713,7 @@ export function ChatActions(props: {
     const showAttach = isSupportAttachFileModel(currentModel);
     setShowUploadFile(showAttach);
     if (!showAttach) {
-      props.setAttachFileUrls([]);
+      // props.setAttachFileUrls([]);
       props.setAttachFileNames([]);
       props.setFileUploading(false);
     }
@@ -782,30 +845,6 @@ export function ChatActions(props: {
         />
       )}
 
-      {!showUploadFile && showUploadImage && (
-        <ChatAction
-          onClick={props.uploadImage}
-          text={Locale.Chat.InputActions.UploadImage}
-          icon={props.uploading ? <LoadingButtonIcon /> : <ImageIcon />}
-        />
-      )}
-
-      {showUploadFile && (
-        <ChatAction
-          onClick={() =>
-            uploadAttachFile(
-              props.attachFileUrls,
-              props.setAttachFileUrls,
-              props.attachFileNames,
-              props.setAttachFileNames,
-              props.setFileUploading,
-            )
-          }
-          text={Locale.Chat.InputActions.UploadFile}
-          icon={props.fileUploading ? <LoadingButtonIcon /> : <UploadIcon />}
-        />
-      )}
-
       {isDalle3(currentModel) && (
         <ChatAction
           onClick={() => setShowSizeSelector(true)}
@@ -924,6 +963,11 @@ export function ChatActions(props: {
           icon={<ShortcutkeyIcon />}
         />
       )}
+      <ChatActionWithText
+        text={props.tokenCount ? `${props.tokenCount} tokens` : "0"}
+        icon={<TokenIcon />}
+        onClick={() => {}}
+      />
     </div>
   );
 }
@@ -1135,11 +1179,18 @@ function _Chat() {
   const [audioUrl, setAudioUrl] = useState("");
 
   // SEEU: add file attach support
-  const [attachFileUrls, setAttachFileUrls] = useState<string[]>([]);
+  const [attachFiles, setAttachFiles] = useState<AttachFile[]>([]);
   const [attachFileNames, setAttachFileNames] = useState<string[]>([]);
   const [fileUploading, setFileUploading] = useState(false);
 
   const [showAttachPanel, setShowAttachPanel] = useState(false);
+
+  useEffect(() => {
+    const images = attachFiles
+      .filter((file) => file.type === "image")
+      .map((file) => file.url);
+    setAttachImages(images);
+  }, [attachFiles]);
 
   // auto grow input
   const [inputRows, setInputRows] = useState(2);
@@ -1206,7 +1257,13 @@ function _Chat() {
   };
 
   const doSubmit = (userInput: string) => {
-    if (userInput.trim() === "" && isEmpty(attachImages)) return;
+    if (
+      userInput.trim() === "" &&
+      isEmpty(attachImages) &&
+      isEmpty(attachFiles)
+    )
+      return;
+
     const matchCommand = chatCommands.match(userInput);
     if (matchCommand.matched) {
       // setUserInput("");
@@ -1220,10 +1277,10 @@ function _Chat() {
 
     let currentModel = session.mask.modelConfig.model;
     if (isSupportAttachFileModel(currentModel)) {
-      // if current model support file attach, fill the template
-      if (attachFileUrls && attachFileUrls.length > 0) {
-        userInput = FillAttachFileTemplate(userInput, attachFileUrls);
-      }
+    }
+    // if current model support file attach, fill the template
+    if (attachFiles && attachFiles.length > 0) {
+      userInput = FillAttachFileTemplate(userInput, attachFiles);
     }
 
     setIsLoading(true);
@@ -1231,7 +1288,7 @@ function _Chat() {
       .onUserInput(userInput, attachImages)
       .then(() => setIsLoading(false));
     setAttachImages([]);
-    setAttachFileUrls([]);
+    setAttachFiles([]);
     setAudioUrl("");
     chatStore.setLastInput(userInput);
     // setUserInput("");
@@ -2088,6 +2145,8 @@ function _Chat() {
                               key={index}
                               src={image}
                               alt=""
+                              width={160}
+                              height={160}
                             />
                           );
                         })}
@@ -2115,14 +2174,15 @@ function _Chat() {
           uploadImage={uploadImage}
           setAttachImages={setAttachImages}
           setUploading={setUploading}
-          attachFileUrls={attachFileUrls}
-          setAttachFileUrls={setAttachFileUrls}
+          attachFiles={attachFiles}
+          setAttachFiles={setAttachFiles}
           attachFileNames={attachFileNames}
           setAttachFileNames={setAttachFileNames}
           fileUploading={fileUploading}
           setFileUploading={setFileUploading}
           showPromptModal={() => setShowPromptModal(true)}
           scrollToBottom={scrollToBottom}
+          tokenCount={tokenCount}
           hitBottom={hitBottom}
           uploading={uploading}
           showPromptHints={() => {
@@ -2141,7 +2201,7 @@ function _Chat() {
         />
         <label
           className={`${styles["chat-input-panel-inner"]} ${
-            attachImages.length != 0
+            attachFiles.length != 0
               ? styles["chat-input-panel-inner-attach"]
               : ""
           } ${
@@ -2156,91 +2216,60 @@ function _Chat() {
           `}
           htmlFor="chat-input"
         >
-          <textarea
-            id="chat-input"
-            ref={inputRef}
-            className={styles["chat-input"]}
-            placeholder={Locale.Chat.Input(submitKey)}
-            onInput={(e) => onInput(e.currentTarget.value)}
-            value={userInput}
-            onKeyDown={onInputKeyDown}
-            onFocus={scrollToBottom}
-            onClick={scrollToBottom}
-            onPaste={handlePaste}
-            rows={inputRows}
-            autoFocus={autoFocus}
-            style={{
-              fontSize: config.fontSize,
-              fontFamily: config.fontFamily,
-            }}
-          />
-          {attachImages.length != 0 && (
-            <div className={styles["attach-images"]}>
-              {attachImages.map((image, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={styles["attach-image"]}
-                    style={{ backgroundImage: `url("${image}")` }}
-                  >
-                    <div className={styles["attach-image-mask"]}>
-                      {/* TODO: 增加进度判断，上传完成时，显示预览弹窗 */}
-                      {/* TODO: 有文件在上传时，不能点击发送 */}
-                      <PreviewImageButton
-                        previewImage={() => {
-                          setPreviewImage(image);
-                          setPreviewTitle("预览");
-                          setPreviewOpen(true);
-                        }}
-                      />
-                      <DeleteImageButton
-                        deleteImage={() => {
-                          setAttachImages(
-                            attachImages.filter((_, i) => i !== index),
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {attachFileUrls.length != 0 && (
+          {attachFiles.length != 0 && (
             <div className={styles["attach-file-wrapper"]}>
-              {attachFileUrls.map((attachFileUrl, index) => {
+              {attachFiles.map((attachFile: AttachFile, index) => {
                 // 是图片的时候，使用背景。不是图片的时候使用图标
-                let attachStyle = isImageUrl(attachFileUrl)
+                let attachStyle = isImageUrl(attachFile.url)
                   ? {
-                      backgroundImage: `url("${attachFileUrl}")`,
+                      backgroundImage: `url("${attachFile.url}")`,
                     }
                   : {};
 
-                let attachClassName = isImageUrl(attachFileUrl)
-                  ? ""
-                  : styles["attach-file"];
+                let attachClassName = isImageUrl(attachFile.url)
+                  ? styles["attach-type-image"]
+                  : styles["attach-type-file"];
 
                 return (
                   <div
                     key={index}
-                    className={`${styles["attach-image"]} ${attachClassName}`}
-                    style={attachStyle}
+                    className={`${styles["attach-file"]} ${attachClassName}`}
                   >
-                    <div className={styles["attach-image-mask"]}>
-                      {isImageUrl(attachFileUrl) && (
-                        <PreviewImageButton
-                          previewImage={() => {
-                            setPreviewImage(attachFileUrl);
-                            setPreviewTitle("预览");
-                            setPreviewOpen(true);
-                          }}
-                        />
+                    <div
+                      className={styles["attach-file-icon"]}
+                      onClick={() => {
+                        if (isImageUrl(attachFile.url)) {
+                          setPreviewImage(attachFile.url);
+                          setPreviewTitle("预览");
+                          setPreviewOpen(true);
+                        }
+                      }}
+                    >
+                      {isImageUrl(attachFile.url) ? (
+                        // 图片缩略图
+                        <img src={attachFile.url} alt="" />
+                      ) : (
+                        // 文件图标
+                        <FileCheckIcon />
                       )}
+                    </div>
+                    <div className={styles["attach-file-name"]}>
+                      {attachFile.name}
+                    </div>
+                    <div className={styles["attach-image-mask"]}>
+                      {isImageUrl(attachFile.url) &&
+                        // <PreviewImageButton
+                        //   previewImage={() => {
+                        //     setPreviewImage(attachFile.url);
+                        //     setPreviewTitle("预览");
+                        //     setPreviewOpen(true);
+                        //   }}
+                        // />
+                        ""}
                       <DeleteAttachFileButton
                         deleteAttachFile={() => {
-                          setAttachFileUrls(
-                            attachFileUrls.filter((_, i) => i !== index),
+                          setAttachFiles(
+                            attachFiles.filter((_, i) => i !== index),
                           );
                         }}
                       />
@@ -2262,6 +2291,24 @@ function _Chat() {
               </AntdModal>
             </div>
           )}
+          <textarea
+            id="chat-input"
+            ref={inputRef}
+            className={styles["chat-input"]}
+            placeholder={Locale.Chat.Input(submitKey)}
+            onInput={(e) => onInput(e.currentTarget.value)}
+            value={userInput}
+            onKeyDown={onInputKeyDown}
+            onFocus={scrollToBottom}
+            onClick={scrollToBottom}
+            onPaste={handlePaste}
+            rows={inputRows}
+            autoFocus={autoFocus}
+            style={{
+              fontSize: config.fontSize,
+              fontFamily: config.fontFamily,
+            }}
+          />
 
           {session.mask.modelConfig.model.startsWith("tts-1") && (
             <div className={styles["audio-plugin-wrapper"]}>
@@ -2281,14 +2328,10 @@ function _Chat() {
               <AudioRecorder setAudioURL={setAudioUrl} />
             </div>
           )}
-          {tokenCount > 0 && (
-            <div className={"token-count"} title={"Token count"}>
-              {tokenCount} <TokenIcon />
-            </div>
-          )}
+
           <IconButton
-            icon={<UploadIcon />}
-            text={Locale.Chat.Attach}
+            icon={<AttachmentUploadIcon />}
+            title={Locale.Chat.Attach}
             className={styles["chat-input-attach"]}
             onClick={() => {
               setShowAttachPanel(true);
@@ -2306,11 +2349,25 @@ function _Chat() {
           {showAttachPanel && (
             <AttachPanel
               onClose={() => setShowAttachPanel(false)}
-              onSelect={(url) => {
-                // TODO: 处理选中的文件
-                setAttachFileUrls([...attachFileUrls, url]);
+              onSelect={(attachFile) => {
+                if (attachFiles.some((file) => file.id === attachFile.id)) {
+                  // 如果文件已选择，移除它
+                  setAttachFiles((prevFiles) =>
+                    prevFiles.filter((file) => file.id !== attachFile.id),
+                  );
+                } else {
+                  // 如果文件未选择，添加它, 保持文件唯一
+                  setAttachFiles((prevFiles) => [
+                    ...prevFiles.filter(
+                      (file) => file.name !== attachFile.name,
+                    ),
+                    attachFile,
+                  ]);
+                }
+                // setAttachFiles([...attachFiles, attachFile]);
                 setShowAttachPanel(false);
               }}
+              selectedFiles={attachFiles}
             />
           )}
         </label>
