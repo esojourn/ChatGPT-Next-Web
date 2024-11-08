@@ -116,6 +116,7 @@ import {
   ServiceProvider,
   modelHasSubTitle,
   MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
+  MAX_ATTACH_FILE_COUNT,
 } from "../constant";
 import { Avatar } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
@@ -140,6 +141,7 @@ import { AttachPanel } from "./AttachPanel";
 
 import Image from "next/image";
 import { AttachFile } from "../types/attach";
+import { getAttachHistory } from "../utils/attach";
 
 const localStorage = safeLocalStorage();
 
@@ -2346,6 +2348,7 @@ function _Chat() {
             <AttachPanel
               onClose={() => setShowAttachPanel(false)}
               onSelect={(attachFile) => {
+                const history = getAttachHistory();
                 if (attachFiles.some((file) => file.id === attachFile.id)) {
                   // 如果文件已选择，移除它
                   setAttachFiles((prevFiles) =>
@@ -2353,6 +2356,10 @@ function _Chat() {
                   );
                 } else {
                   // 如果文件未选择，添加它, 保持文件唯一
+                  if (history.length >= MAX_ATTACH_FILE_COUNT) {
+                    showToast("附件历史记录已满，请删除一些附件");
+                    return;
+                  }
                   setAttachFiles((prevFiles) => [
                     ...prevFiles.filter(
                       (file) => file.name !== attachFile.name,
