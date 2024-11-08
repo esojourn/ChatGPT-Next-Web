@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const { filename, contentType } = await request.json();
   // 取得文件名扩展
   const fileExtension = filename.split(".").pop();
-  const fileKey = uuidv4() + "." + fileExtension;
+  const fileKey = `temp/${uuidv4()}.${fileExtension}`;
 
   try {
     const serverConfig = getServerSideConfig();
