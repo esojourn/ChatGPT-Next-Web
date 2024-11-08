@@ -783,18 +783,31 @@
   padding: 8px;
 
   &.attach-type-image {
-    width: auto; // 图片宽度根据内容决定
-    background-size: cover;
-    background-position: center;
-    background-color: var(--white);
+    .attach-file-icon {
+      img {
+        cursor: pointer;
+        border-color: transparent;
+        border-width: 1px;
+        border-style: solid;
+      }
+      &:hover {
+        img {
+          border-color: var(--primary);
+        }
+      }
+    }
   }
 
-  &.attach-type-file {
-    width: auto; // 文件图标宽度根据内容决定
-    // background-image: url('path/to/file-icon.png'); // 替换为文件图标路径
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+  .delete-attach-file {
+    cursor: pointer;
+    svg {
+      opacity: 0.5;
+    }
+    &:hover {
+      svg {
+        opacity: 1;
+      }
+    }
   }
 }
 

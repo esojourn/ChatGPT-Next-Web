@@ -397,6 +397,10 @@ const openaiModels = [
   "gpt-4-vision-preview",
   "tts-1",
   "bing-Balanced",
+  "claude-3-5-sonnet",
+  "claude-3-opus",
+  "claude-3-sonnet",
+  "claude-3-haiku",
 ];
 
 const googleModels = [
@@ -415,10 +419,10 @@ const anthropicModels = [
   "claude-3-opus-20240229",
   "claude-3-haiku-20240307",
   "claude-3-5-sonnet-20240620",
-  "claude-3-5-sonnet",
-  "claude-3-opus",
-  "claude-3-sonnet",
-  "claude-3-haiku",
+  // "claude-3-5-sonnet",
+  // "claude-3-opus",
+  // "claude-3-sonnet",
+  // "claude-3-haiku",
 ];
 
 const baiduModels = [

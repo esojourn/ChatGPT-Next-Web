@@ -1054,7 +1054,10 @@ export function DeleteAttachFileButton(props: {
   deleteAttachFile: () => void;
 }) {
   return (
-    <div className={styles["delete-image"]} onClick={props.deleteAttachFile}>
+    <div
+      className={styles["delete-attach-file"]}
+      onClick={props.deleteAttachFile}
+    >
       <DeleteIcon />
     </div>
   );
@@ -2219,13 +2222,6 @@ function _Chat() {
           {attachFiles.length != 0 && (
             <div className={styles["attach-file-wrapper"]}>
               {attachFiles.map((attachFile: AttachFile, index) => {
-                // 是图片的时候，使用背景。不是图片的时候使用图标
-                let attachStyle = isImageUrl(attachFile.url)
-                  ? {
-                      backgroundImage: `url("${attachFile.url}")`,
-                    }
-                  : {};
-
                 let attachClassName = isImageUrl(attachFile.url)
                   ? styles["attach-type-image"]
                   : styles["attach-type-file"];
