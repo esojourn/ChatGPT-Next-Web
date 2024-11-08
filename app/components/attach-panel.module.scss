@@ -53,6 +53,33 @@
   &:last-child {
     margin-bottom: 0;
   }
+
+  .delete-button {
+    position: absolute;
+    right: 8px;
+    top: 18px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  &:hover {
+    .delete-button {
+      opacity: 1;
+    }
+  }
 }
 
 .attach-item-selected {
@@ -61,10 +88,10 @@
   &::after {
     content: "✓";
     position: absolute;
-    bottom: 8px; // 距离底部8px
-    right: 8px; // 距离右侧8px
-    font-size: 12px; // 图标大小
-    color: var(--black); // 图标颜色
+    bottom: 0;
+    left: 0;
+    font-size: 12px;
+    color: #3cce67;
   }
 }
 

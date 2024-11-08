@@ -1,7 +1,7 @@
 import { AttachFile } from "../types/attach";
 
 const ATTACH_HISTORY_KEY = "attach_history";
-const MAX_HISTORY_LENGTH = 10;
+const MAX_HISTORY_LENGTH = 20;
 
 export function saveAttachHistory(file: AttachFile) {
   const history = getAttachHistory();
@@ -9,7 +9,7 @@ export function saveAttachHistory(file: AttachFile) {
   // 添加新文件到开头
   history.unshift(file);
 
-  // 只保留最近10条
+  // 只保留最近20条
   if (history.length > MAX_HISTORY_LENGTH) {
     history.length = MAX_HISTORY_LENGTH;
   }

@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { showToast } from "./ui-lib";
 import Locale from "../locales";
 import FileCheckIcon from "../icons/file-check.svg";
+import DeleteIcon from "../icons/clear.svg";
 
 export function AttachPanel(props: {
   onClose: () => void;
@@ -15,10 +16,21 @@ export function AttachPanel(props: {
 }) {
   const [history, setHistory] = useState<AttachFile[]>([]);
   const panelRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<HTMLDivElement>(null); // 添加历史记录区域的ref
 
   // 加载历史记录
   useEffect(() => {
-    setHistory(getAttachHistory());
+    const files = getAttachHistory();
+    // 按日期升序排列
+    const sortedFiles = files.sort((a, b) => a.date - b.date);
+    setHistory(sortedFiles);
+
+    // 添加滚动到底部的逻辑
+    setTimeout(() => {
+      if (historyRef.current) {
+        historyRef.current.scrollTop = historyRef.current.scrollHeight;
+      }
+    }, 0);
   }, []);
 
   // 点击外部关闭
@@ -62,7 +74,8 @@ export function AttachPanel(props: {
         };
 
         saveAttachHistory(newFile);
-        setHistory(getAttachHistory());
+        const newHistory = getAttachHistory().sort((a, b) => a.date - b.date);
+        setHistory(newHistory);
         props.onSelect(newFile);
       };
       reader.readAsDataURL(file);
@@ -90,7 +103,10 @@ export function AttachPanel(props: {
               size: file.size,
             };
             saveAttachHistory(newFile);
-            setHistory(getAttachHistory());
+            const newHistory = getAttachHistory().sort(
+              (a, b) => a.date - b.date,
+            );
+            setHistory(newHistory);
             props.onSelect(newFile);
           },
         });
@@ -102,7 +118,7 @@ export function AttachPanel(props: {
 
   return (
     <div className={styles["attach-panel"]} ref={panelRef}>
-      <div className={styles["attach-history"]}>
+      <div className={styles["attach-history"]} ref={historyRef}>
         {history.map((file) => {
           const isSelected = props.selectedFiles.some(
             (selectedFile) => selectedFile.id === file.id,
@@ -131,6 +147,18 @@ export function AttachPanel(props: {
                 <div className={styles["attach-date"]}>
                   {new Date(file.date).toLocaleString()}
                 </div>
+              </div>
+              <div
+                className={styles["delete-button"]}
+                onClick={(e) => {
+                  e.stopPropagation(); // 防止触发选择事件
+                  const newHistory = history.filter(
+                    (_, i) => i !== history.indexOf(file),
+                  );
+                  setHistory(newHistory);
+                }}
+              >
+                <DeleteIcon />
               </div>
             </div>
           );
