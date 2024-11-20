@@ -325,4 +325,3 @@ bash <(curl -s https://raw.githubusercontent.com/Yidadaa/ChatGPT-Next-Web/main/s
 ## 开源协议
 
 [MIT](https://opensource.org/license/mit/)
-a
