@@ -126,19 +126,25 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-title"]}>GPT for Free</div>
         <div className={styles["sidebar-sub-title"]}>
           <p>
-            请加微信“alz-ai”私信获取密码。
+            23年末，迫于捐助不足，建立了付费站点。
+            无心插柳，却在一年多的积累后，获得了一批稳定的用户支持。
+            获得的收入重新投入到免费站的运营上。目前免费站可以比较稳定的持续服务了。
+            感谢用户的支持认可！💕💕💕
+          </p>
+          <p>
+            免费站密码更新，请加微信“alz-ai”获取。
             <br />
-            免费站人太多时，会暂停几小时，可以稍后再来。
-            我们使用付费站收入，来支持免费站运行。
           </p>
           <li>
-            免费站全面升级，开通gpt-4o-mini模型。根据官方信息，智能程度相当于gpt4的80%
+            免费站支持gpt-4o-mini模型，人太多时，会暂停几小时，可以稍后再来。
           </li>
-          <li>付费站claude 3 opus降价40%</li>
-          <li>付费站新增suno-v3模型支持。根据文字描述生成音乐。</li>
-          <li>付费站支持GPT-4，Claude-3-Opus等高级模型。</li>
-          <li>支持联网、图片升成，图片/文档识别等高级功能。</li>
-          <p>如需更多功能，请微信联系。15元起。</p>
+          <li>
+            付费站支持众多最先进的模型，包括：GPT-4-plus / Claude 3 Opus / 3.5
+            Sonnet等
+          </li>
+          <li>付费站支持联网 / 链接搜索引擎 / 文档识别等高级功能。</li>
+          <li>付费站支持suno-v3模型支持。根据文字描述生成音乐。</li>
+          <p>付费站价格15元起，请微信联系alz-ai。</p>
           <a
             href="#"
             className={styles["more-news"]}
@@ -148,9 +154,9 @@ export function SideBar(props: { className?: string }) {
                 title: "GPT for all",
                 children: (
                   <div>
-                    我们使用付费站收入，来支持免费站运行。
+                    我们使用付费站收入，来维持免费站运行。
                     <br />
-                    不必支付昂贵月租，不必承担封号风险，不需要魔法可直连。
+                    付费用户不必支付昂贵月租，不必承担封号风险，不需要魔法可直连。
                     <br />
                     按照实际用量计费。15元起。
                     <br />
@@ -160,6 +166,7 @@ export function SideBar(props: { className?: string }) {
                       <li>
                         gpt-4-plus：支持文档/图片识别、Dall-E3图片生成、支持联网搜索（用英文搜索效果更好，注意额度消耗）。
                       </li>
+                      <li>gpt-4o / Claude-3.5-Sonnet。</li>
                       <li>
                         gpt-4-turbo：知识截止23年12月，支持128k
                         token长度，减少“变懒”症状。价格相当于gpt-4的1/3
