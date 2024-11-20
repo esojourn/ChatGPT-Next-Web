@@ -15,23 +15,12 @@ export class NotificationSummary extends Component<{ showNotification: any }> {
     return (
       <div>
         <b>最新消息</b>
-        <br />
-        - o1-preview，o1-mini已经开通 OpenAI
-        9月份发布模型。思考能力增强。科学、工程、数学领域适用
-        <br />
-        - gpt-4o-mini已经开通
-        替代gpt-3.5-turbo的最佳选择。费用相当于3.5的1/3，智能程度相当于gpt4的80%
-        <br />
-        - 第一时间开启claude 3.5
-        sonnet支持。1/5价格，双倍速度，成绩超过上版大杯c-3-opus
-        <br />
-        -
-        第一时间开启gpt-4o支持，逻辑推理和情感识别强大，价格只有gpt-4-turbo的一半！
-        <br />
-        - claude-3-opus价格下调40%。费率大约相当于gpt-4的60%
-        <br />
-        -
-        新增bing-Balance：联网支持好，可搜索，可读取指定地址。价格是gpt-4-plus的1/3。
+        <br />-
+        24-11-20平台功能多处更新。可以通过插件支持PDF分析和联网搜索功能。
+        <a href="https://b1.alz-ai.cn/tags/tips" target="_blank">
+          操作说明
+        </a>
+        （陆续制作中）
         <br />
         <br />
         <a
@@ -63,6 +52,8 @@ export function showNotification() {
           />
         </div>
         <p>
+          24/11/20：平台功能多处更新。可以通过插件支持PDF分析和联网搜索功能。
+          <br />
           24/09/13：第一时间开通o1-preview，o1-mini OpenAI
           9月份发布模型。思考能力增强。科学、工程、数学领域适用
           <br />
