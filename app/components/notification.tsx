@@ -14,14 +14,16 @@ export class NotificationSummary extends Component<{ showNotification: any }> {
     let { showNotification } = this.props;
     return (
       <div>
-        <b>最新消息</b>
-        <br />-
-        24-11-20平台功能多处更新。可以通过插件支持PDF分析和联网搜索功能。
-        <a href="https://b1.alz-ai.cn/tags/tips" target="_blank">
-          操作说明
-        </a>
-        （陆续制作中）
-        <br />
+        <b>2024-11-20最新消息</b>
+        <li>平台功能多处更新。可以通过插件支持PDF分析和联网搜索功能。</li>
+        <li>
+          查看新功能
+          <a href="https://b1.alz-ai.cn/tags/tips" target="_blank">
+            操作说明
+          </a>
+          （陆续制作中）。
+        </li>
+        <li>购买请加微信：alz-ai</li>
         <br />
         <a
           href="#"
@@ -30,7 +32,7 @@ export class NotificationSummary extends Component<{ showNotification: any }> {
             showNotification();
           }}
         >
-          查看详情
+          操作说明
         </a>
       </div>
     );
