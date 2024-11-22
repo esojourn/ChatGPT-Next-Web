@@ -18,7 +18,7 @@ export class NotificationSummary extends Component<{ showNotification: any }> {
         <li>平台功能多处更新。可以通过插件支持PDF分析和联网搜索功能。</li>
         <li>
           查看新功能
-          <a href="https://b1.alz-ai.cn/tags/tips" target="_blank">
+          <a href="https://blog.alz-ai.cn/tags/tips" target="_blank">
             操作说明
           </a>
           （陆续制作中）。
