@@ -9,6 +9,10 @@ import ConfirmIcon from "../icons/confirm.svg";
 import CancelIcon from "../icons/cancel.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
+import SearchIcon from "../icons/search.svg";
+import VisionEyeIcon from "../icons/vision-eye.svg";
+import HelpIcon from "../icons/help.svg";
+import ClearQueryIcon from "../icons/clear-query.svg";
 
 import Locale from "../locales";
 
@@ -23,6 +27,12 @@ import React, {
   useRef,
 } from "react";
 import { IconButton } from "./button";
+import { Gizmo } from "../types/gizmo";
+import {
+  CHATGPT_GPTS_DATA_URL,
+  CHATGPT_GPTS_QUERY_URL,
+  ServiceProvider,
+} from "../constant";
 
 export function Popover(props: {
   children: JSX.Element;
@@ -86,6 +96,18 @@ export function ListItem(props: {
 export function List(props: { children: React.ReactNode; id?: string }) {
   return (
     <div className={styles.list} id={props.id}>
+      {props.children}
+    </div>
+  );
+}
+
+export function ListWithStyle(props: {
+  children: React.ReactNode;
+  id?: string;
+  className?: string;
+}) {
+  return (
+    <div className={styles.list + " " + props.className} id={props.id}>
       {props.children}
     </div>
   );
@@ -472,6 +494,7 @@ export function Selector<T>(props: {
     subTitle?: string;
     value: T;
     disable?: boolean;
+    isVision?: boolean;
   }>;
   defaultSelectedValue?: T[] | T;
   onSelection?: (selection: T[]) => void;
@@ -515,6 +538,7 @@ export function Selector<T>(props: {
                 key={i}
                 title={item.title}
                 subTitle={item.subTitle}
+                icon={item.isVision ? <VisionEyeIcon /> : <></>}
                 onClick={(e) => {
                   if (item.disable) {
                     e.stopPropagation();
@@ -543,6 +567,112 @@ export function Selector<T>(props: {
     </div>
   );
 }
+
+export function PluginsSelector<T>(props: {
+  items: Array<{
+    title: string;
+    subTitle?: string;
+    value: T;
+    disable?: boolean;
+    helpLink?: string;
+  }>;
+  defaultSelectedValue?: T[] | T;
+  onSelection?: (selection: T[]) => void;
+  onClose?: () => void;
+  multiple?: boolean;
+}) {
+  const [selectedValues, setSelectedValues] = useState<T[]>(
+    Array.isArray(props.defaultSelectedValue)
+      ? props.defaultSelectedValue
+      : props.defaultSelectedValue !== undefined
+      ? [props.defaultSelectedValue]
+      : [],
+  );
+
+  const handleSelection = (e: MouseEvent, value: T) => {
+    if (props.multiple) {
+      e.stopPropagation();
+      const newSelectedValues = selectedValues.includes(value)
+        ? selectedValues.filter((v) => v !== value)
+        : [...selectedValues, value];
+      setSelectedValues(newSelectedValues);
+      props.onSelection?.(newSelectedValues);
+    } else {
+      setSelectedValues([value]);
+      props.onSelection?.([value]);
+      props.onClose?.();
+    }
+  };
+
+  return (
+    <div
+      className={`${styles["selector"]} ${styles["plugins-selector"]}`}
+      onClick={() => props.onClose?.()}
+    >
+      <div className={styles["selector-content"]}>
+        <div className={styles["help-link-container"]}>
+          <a
+            href="https://blog.alz-ai.cn/tags/tips"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles["help-link"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span>💡</span>
+            了解插件的使用
+          </a>
+        </div>
+        <List>
+          {props.items.map((item, i) => {
+            const selected = selectedValues.includes(item.value);
+            return (
+              <ListItem
+                className={`${styles["selector-item"]} ${
+                  item.disable && styles["selector-item-disabled"]
+                }`}
+                key={i}
+                title={item.title}
+                subTitle={item.subTitle}
+                onClick={(e) => {
+                  if (item.disable) {
+                    e.stopPropagation();
+                  } else {
+                    handleSelection(e, item.value);
+                  }
+                }}
+              >
+                <>
+                  {item.helpLink && (
+                    <a
+                      href={item.helpLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles["help-icon"]}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <HelpIcon />
+                    </a>
+                  )}
+                  {selected && (
+                    <div
+                      style={{
+                        height: 10,
+                        width: 10,
+                        backgroundColor: "var(--primary)",
+                        borderRadius: 10,
+                      }}
+                    ></div>
+                  )}
+                </>
+              </ListItem>
+            );
+          })}
+        </List>
+      </div>
+    </div>
+  );
+}
+
 export function FullScreen(props: any) {
   const { children, right = 10, top = 10, ...rest } = props;
   const ref = useRef<HTMLDivElement>();
@@ -575,6 +705,261 @@ export function FullScreen(props: any) {
         />
       </div>
       {children}
+    </div>
+  );
+}
+
+export function ModelSelectorWithGPTs<T>(props: {
+  items: Array<{
+    title: string;
+    subTitle?: string;
+    value: T;
+    disable?: boolean;
+    isVision?: boolean;
+  }>;
+  defaultSelectedValue?: T;
+  onSelection?: (selection: T) => void;
+  onClose?: () => void;
+  onLoadMore?: () => void;
+
+  gizmos: Array<Gizmo>;
+  setGizmos?: (gizmos: Gizmo[]) => void;
+  isLoadingGpts?: boolean;
+  setIsLoadingGpts?: (loading: boolean) => void;
+}) {
+  const [activeTab, setActiveTab] = useState<"models" | "gpts">("models");
+  const [selectedValue, setSelectedValue] = useState<T | undefined>(
+    props.defaultSelectedValue,
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [gptsType, setGptsType] = useState<"all" | "query">("all");
+
+  useEffect(() => {
+    const [currentModel] = selectedValue?.toString().split("@") ?? [];
+    if (currentModel?.startsWith("gpt-4-gizmo")) {
+      setActiveTab("gpts");
+    }
+  }, [selectedValue]);
+
+  const handleSelection = (value: T) => {
+    if (activeTab === "gpts") {
+      value = `${value}@OpenAI` as T;
+    }
+
+    setSelectedValue(value);
+    props.onSelection?.(value);
+    props.onClose?.();
+  };
+
+  // const filteredGizmos = props.gizmos.filter(gizmo =>
+  //   gizmo.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
+  return (
+    <div
+      className={`${styles["selector"]} ${styles["selector-with-gpts"]}`}
+      onClick={() => props.onClose?.()}
+    >
+      <div className={styles["selector-content"]}>
+        <div className={styles["selector-tabs"]}>
+          <div
+            className={`${styles["selector-tab"]} ${
+              activeTab === "models" ? styles["active"] : ""
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveTab("models");
+            }}
+          >
+            模型
+          </div>
+          <div
+            className={`${styles["selector-tab"]} ${
+              activeTab === "gpts" ? styles["active"] : ""
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveTab("gpts");
+            }}
+          >
+            GPTs
+          </div>
+        </div>
+
+        {activeTab === "gpts" && (
+          <div className={styles["gpts-search-container"]}>
+            <input
+              type="text"
+              placeholder="搜索..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles["gpts-search-input"]}
+              onFocus={(e) => {
+                e.stopPropagation();
+                // 移除placeholder
+                e.target.placeholder = "";
+              }}
+              onBlur={(e) => {
+                e.stopPropagation();
+                // 恢复placeholder
+                e.target.placeholder = "搜索...";
+              }}
+              onClick={(e) => {
+                // 阻止冒泡
+                e.stopPropagation();
+              }}
+            />
+            {gptsType === "query" && (
+              <button
+                type="button"
+                className={styles["gpts-search-button"]}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSearchTerm("");
+                  setGptsType("all");
+                  props.setIsLoadingGpts?.(true);
+                  fetch(CHATGPT_GPTS_DATA_URL)
+                    .then((res) => res.json())
+                    .then((data) => {
+                      props.setGizmos?.(data?.gpts ?? []);
+                      props.setIsLoadingGpts?.(false);
+                    })
+                    .catch((err) => {
+                      console.error("Failed to fetch gpts:", err);
+                      props.setIsLoadingGpts?.(false);
+                    });
+                }}
+              >
+                <ClearQueryIcon />
+              </button>
+            )}
+            <button
+              type="submit"
+              className={styles["gpts-search-button"]}
+              onClick={(e) => {
+                e.stopPropagation();
+                props.setIsLoadingGpts?.(true);
+                // 通过searchTerm来搜索
+                fetch(`${CHATGPT_GPTS_QUERY_URL}?q=${searchTerm}`)
+                  .then((res) => res.json())
+                  .then((data) => {
+                    setGptsType("query");
+                    props.setGizmos?.(data.data?.list ?? []);
+                    props.setIsLoadingGpts?.(false);
+                  })
+                  .catch((err) => {
+                    console.error("Failed to fetch gpts:", err);
+                    props.setIsLoadingGpts?.(false);
+                  });
+              }}
+            >
+              <SearchIcon />
+            </button>
+          </div>
+        )}
+
+        {props.isLoadingGpts && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "20px 0",
+              height: "100px",
+            }}
+          >
+            <LoadingIcon />
+          </div>
+        )}
+
+        {!props.isLoadingGpts && (
+          <ListWithStyle
+            className={
+              activeTab === "models"
+                ? styles["models-list"]
+                : styles["gpts-list"]
+            }
+          >
+            {activeTab === "models"
+              ? props.items.map((item, i) => {
+                  const selected = selectedValue === item.value;
+                  return (
+                    <ListItem
+                      className={`${styles["selector-item"]} ${
+                        item.disable && styles["selector-item-disabled"]
+                      } ${selected && styles["selector-item-selected"]}`}
+                      key={i}
+                      title={item.title}
+                      subTitle={item.subTitle}
+                      icon={item.isVision ? <VisionEyeIcon /> : <></>}
+                      onClick={(e) => {
+                        if (item.disable) {
+                          e.stopPropagation();
+                        } else {
+                          handleSelection(item.value);
+                        }
+                      }}
+                    >
+                      {selected ? (
+                        <div
+                          style={{
+                            height: 10,
+                            width: 10,
+                            backgroundColor: "var(--primary)",
+                            borderRadius: 10,
+                          }}
+                        ></div>
+                      ) : (
+                        <></>
+                      )}
+                    </ListItem>
+                  );
+                })
+              : props.gizmos.map((item, i) => {
+                  const selected =
+                    selectedValue === `${item.gid}@${ServiceProvider.OpenAI}`;
+                  return (
+                    <ListItem
+                      className={`${styles["selector-item"]} ${
+                        selected && styles["selector-item-selected"]
+                      } `}
+                      key={i}
+                      title={item.name}
+                      subTitle={item.info}
+                      icon={
+                        <img
+                          src={item.logo}
+                          style={{ width: 64, height: 64 }}
+                        />
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelection(item.gid as T);
+                      }}
+                    >
+                      <></>
+                    </ListItem>
+                  );
+                })}
+          </ListWithStyle>
+        )}
+
+        {activeTab === "gpts" && searchTerm === "" && gptsType === "all" && (
+          <>
+            <div className={styles["gpts-load-more-container"]}>
+              <a
+                className={styles["gpts-load-more-button"]}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  props.onLoadMore?.();
+                }}
+              >
+                更多模型
+              </a>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

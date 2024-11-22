@@ -22,6 +22,7 @@ export function ModelConfigList(props: {
 
   return (
     <>
+      {/*
       <ListItem title={Locale.Settings.Model}>
         <Select
           aria-label={Locale.Settings.Model}
@@ -46,6 +47,7 @@ export function ModelConfigList(props: {
           ))}
         </Select>
       </ListItem>
+      */}
       <ListItem
         title={Locale.Settings.Temperature.Title}
         subTitle={Locale.Settings.Temperature.SubTitle}
@@ -255,6 +257,9 @@ export function ModelConfigList(props: {
           }}
         >
           {allModels
+            .filter((model) =>
+              ["gpt-4o-mini", "gpt-4o", "claude-3-haiku"].includes(model.name),
+            )
             .filter((v) => v.available)
             .map((v, i) => (
               <option value={`${v.name}@${v.provider?.providerName}`} key={i}>

@@ -603,7 +603,13 @@
   border-radius: 10px;
   border: var(--border-in-light);
   flex-direction: column;
+}
+
+.chat-input-panel-inner-attach {
   padding-left: 60px;
+  .chat-input {
+    padding-left: 0;
+  }
 }
 
 .chat-input-panel-inner-audio {
@@ -836,3 +842,4 @@
   text-overflow: ellipsis;
   padding-right: 8px;
 }
+

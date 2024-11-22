@@ -38,7 +38,7 @@ export const API_LOG_BASE_URL = "https://log.betai55.uk/log";
 
 export const FILE_SERVER_BASE_URL = "https://file.nextweb.fun";
 
-export const BLOG_URL = "https://b1.az-ai.icu";
+export const BLOG_URL = "https://blog.az-ai.icu";
 
 export enum Path {
   Home = "/",
@@ -53,6 +53,7 @@ export enum Path {
   Artifacts = "/artifacts",
   SearchChat = "/search-chat",
   ApiKeyLog = "/api-key-log",
+  Pricing = "/pricing",
 }
 
 export enum ApiPath {
@@ -71,6 +72,7 @@ export enum ApiPath {
   Artifacts = "/api/artifacts",
   UniSee = "/api/unisee",
   upload = "/api/upload",
+  Pricing = "/api/pricing",
 }
 
 export enum SlotID {
@@ -396,11 +398,13 @@ const openaiModels = [
   "gpt-4-plus",
   "gpt-4-vision-preview",
   "tts-1",
+  "suno-v3",
   "bing-Balanced",
   "claude-3-5-sonnet",
   "claude-3-opus",
   "claude-3-sonnet",
   "claude-3-haiku",
+  "gpt-4-gizmo-g-2fkFE8rbu",
 ];
 
 const googleModels = [
@@ -563,6 +567,10 @@ export const modelHasSubTitle: {
   //   displayName: "gemini-pro",
   //   subTitle: "Google AI模型：Gemini Pro",
   // },
+  "gpt-4-gizmo-g-2fkFE8rbu": {
+    displayName: "Test GPTs",
+    subTitle: "This is test gpts",
+  },
 };
 
 let seq = 1000; // 内置的模型序号生成器从1000开始
@@ -742,3 +750,13 @@ export const MAX_UPLOAD_GPT4PLUS_FILE_LENGTH = 3;
 export const MAX_UPLOAD_VISION_IMAGES_LENGTH = 3;
 
 export const MAX_ATTACH_FILE_COUNT = 20;
+
+// GPTs Paths
+export const CHATGPT_GPTS_DATA_URL = "/api/gpts/data";
+export const CHATGPT_GPTS_LIST_URL = "/api/gpts/list";
+export const CHATGPT_GPTS_QUERY_URL = "/api/gpts/query";
+
+export const PRICING_API_PATH = "/api/pricing";
+
+export const PLUGIN_HELP_URL = "https://blog.alz-ai.cn/tags/tips";
+export const PLUGINS_HELP_DATA_URL = "/plugins-help.json";

@@ -31,6 +31,7 @@ import { ModelConfig, ModelType, useAppConfig } from "./config";
 import { useAccessStore } from "./access";
 import { collectModelsWithDefaultModel } from "../utils/model";
 import { createEmptyMask, Mask } from "./mask";
+import { Gizmo } from "../types/gizmo";
 
 const localStorage = safeLocalStorage();
 
@@ -374,7 +375,11 @@ export const useChatStore = createPersistStore(
         get().summarizeSession();
       },
 
-      async onUserInput(content: string, attachImages?: string[]) {
+      async onUserInput(
+        content: string,
+        attachImages?: string[],
+        gizmos?: Gizmo[],
+      ) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
 
@@ -403,7 +408,9 @@ export const useChatStore = createPersistStore(
         const botMessage: ChatMessage = createMessage({
           role: "assistant",
           streaming: true,
-          model: modelConfig.model,
+          model: modelConfig.model.startsWith("gpt-4-gizmo")
+            ? `${gizmos?.find((g) => g.gid === modelConfig.model)?.name}`
+            : modelConfig.model,
         });
 
         // get recent messages
@@ -840,8 +847,8 @@ export const useChatStore = createPersistStore(
       if (version < 3.3) {
         newState.sessions.forEach((s) => {
           const config = useAppConfig.getState();
-          s.mask.modelConfig.compressModel = "";
-          s.mask.modelConfig.compressProviderName = "";
+          s.mask.modelConfig.compressModel = "gpt-3.5-turbo" as ServiceProvider;
+          s.mask.modelConfig.compressProviderName = "openai" as ServiceProvider;
         });
       }
 

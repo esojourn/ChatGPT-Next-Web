@@ -336,7 +336,7 @@ const en: LocaleType = {
         return `Used this month $${used}, subscription $${total}`;
       },
       Remaining: (remaining: any) =>
-        `Remaining $${remaining} (Due to cache, balance statistics may be delayed by 1 minute)`,
+        `Remaining $${remaining} (Due to cache, data may be delayed)`,
       IsChecking: "Checking...",
       Check: "Check",
       NoAccess: "Enter API Key to check balance",
@@ -857,6 +857,9 @@ const en: LocaleType = {
       CompletionTokens: "Completion tokens",
       Quota: "Quota",
     },
+  },
+  Pricing: {
+    Title: "Pricing",
   },
 };
 

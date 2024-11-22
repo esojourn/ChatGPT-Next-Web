@@ -243,5 +243,10 @@ export const getServerSideConfig = () => {
     oss_access_key_secret: process.env.OSS_ACCESS_KEY_SECRET,
     oss_region: process.env.OSS_REGION,
     oss_bucket_name: process.env.OSS_BUCKET_NAME,
+
+    // GPTs
+    support_gpts: process.env.SUPPORTED_GPTs,
+
+    pluginsHelpUrl: process.env.PLUGINS_HELP_URL,
   };
 };
