@@ -64,7 +64,15 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
   return result;
 }
 
-export function MaskAvatar(props: { avatar: string; model?: ModelType }) {
+export function MaskAvatar(props: {
+  avatar: string;
+  model?: ModelType;
+  src?: string;
+}) {
+  if (props.model?.startsWith("gpt-4-gizmo")) {
+    return <Avatar src={props.avatar} />;
+  }
+
   return props.avatar !== DEFAULT_MASK_AVATAR ? (
     <Avatar avatar={props.avatar} />
   ) : (

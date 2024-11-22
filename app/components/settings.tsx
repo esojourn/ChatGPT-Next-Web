@@ -1732,7 +1732,6 @@ export function Settings() {
             ></input>
           </ListItem> */}
         </List>
-
         <List>
           <ModelConfigList
             modelConfig={config.modelConfig}

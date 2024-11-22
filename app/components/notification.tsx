@@ -9,6 +9,9 @@ import plus2 from "@/app/images/240301b.png";
 import { Component } from "react";
 import Image from "next/image";
 
+import Locale from "../locales";
+import { Path } from "../constant";
+import { Link } from "react-router-dom";
 export class NotificationSummary extends Component<{ showNotification: any }> {
   render() {
     let { showNotification } = this.props;
@@ -43,6 +46,7 @@ export class NotificationSummary extends Component<{ showNotification: any }> {
         >
           查看详情
         </a>
+        <Link to={Path.Pricing}>{Locale.Pricing.Title}</Link>
       </div>
     );
   }

@@ -1,10 +1,9 @@
 import { useDebouncedCallback } from "use-debounce";
 import OpenAPIClientAxios from "openapi-client-axios";
 import yaml from "js-yaml";
-import { PLUGINS_REPO_URL } from "../constant";
+import { PLUGIN_HELP_URL, PLUGINS_REPO_URL } from "../constant";
 import { IconButton } from "./button";
 import { ErrorBoundary } from "./error";
-
 import styles from "./mask.module.scss";
 import pluginStyles from "./plugin.module.scss";
 
@@ -15,6 +14,7 @@ import DeleteIcon from "../icons/delete.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 import ReloadIcon from "../icons/reload.svg";
 import GithubIcon from "../icons/github.svg";
+import HelpIcon from "../icons/help.svg";
 
 import { Plugin, usePluginStore, FunctionToolService } from "../store/plugin";
 import {
@@ -129,6 +129,15 @@ export function PluginPage() {
           </div>
 
           <div className="window-actions">
+            <div className="window-action-button">
+              <a
+                href={PLUGIN_HELP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconButton icon={<HelpIcon />} bordered />
+              </a>
+            </div>
             <div className="window-action-button">
               <a
                 href={PLUGINS_REPO_URL}

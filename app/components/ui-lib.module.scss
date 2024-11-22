@@ -313,13 +313,23 @@
   .selector-item-disabled {
     opacity: 0.6;
   }
+  .selector-item-selected {
+    background-color: var(--second) !important;
+  }
 
   &-content {
     min-width: 300px;
+    border: var(--border-in-light);
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 20px;
+    animation: slide-in ease 0.3s;
+    background: var(--white);
     .list {
-      max-height: 90vh;
+      max-height: 70vh;
       overflow-x: hidden;
       overflow-y: auto;
+      box-shadow: none;
 
       .list-item {
         cursor: pointer;
@@ -335,5 +345,223 @@
       }
     }
   }
+  .list-item {
+    position: relative;
+
+    .list-item-icon {
+      position: absolute;
+      right: 10px;
+    }
+  }
+  .list-header {
+    position: relative;
+    width: 90%;
+    padding-right: 32px;
+  }
+  .list-icon {
+    position: absolute;
+    right: 10px;
+    height: 16px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      filter: none !important;
+    }
+  }
+
 }
+
+.plugins-selector {
+  .help-link-container {
+    width: 100%;
+    padding: 10px 20px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .help-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    justify-content: center;
+    color: var(--black);
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .selector-content {
+    .list {
+      margin-bottom: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+  .help-icon {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 24px;
+    line-height: 24px;
+    width: 24px;
+    svg {
+      width: 24px;
+      height: 24px;
+      path {
+        fill: var(--black);
+      }
+    }
+    &:hover {
+      svg {
+        path {
+          fill: var(--primary);
+        }
+      }
+    }
+  }
+}
+
+.selector-with-gpts {
+  .list {
+    border: none !important;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .models-list {
+
+  }
+  .gpts-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); // PC端两列布局
+    max-width: 640px; // PC端最大宽度
+    width: 100%;
+    gap: 10px;
+    padding: 0 20px;
+    .list-header {
+      padding-right: 0;
+      padding-left: 74px;
+      min-height: 64px;
+    }
+    .list-icon {
+      top: 0;
+      left: 0;
+      height: 64px;
+      svg {
+        width: 64px;
+        height: 64px;
+      }
+    }
+    .list-item {
+      align-items: flex-start;
+      padding: 10px;
+      border: var(--border-in-light);
+    }
+    .list-item-sub-title {
+      height: 60px;
+      line-height: 20px;
+      overflow: hidden;
+    }
+  }
+  .gpts-search-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    line-height: 24px;
+    padding: 3px;
+    margin-left: 10px;
+    border-radius: 5px;
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+    &:hover {
+      background-color: var(--hover-color);
+    }
+  }
+}
+// 移动端样式
+@media screen and (max-width: 768px) {
+  .selector-with-gpts {
+    .gpts-list {
+      grid-template-columns: 1fr; // 移动端一列布局
+      // max-width: 80%; // 移动端最大宽度为80%
+    }
+  }
+}
+
+.selector-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.selector-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+
+  &:hover {
+    background-color: var(--hover-color);
+  }
+
+  &.active {
+    border-bottom: 1px solid var(--primary);
+    color: var(--primary);
+  }
+}
+.gpts-search-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 0 20px 10px;
+}
+
+.gpts-search-input {
+  flex-grow: 1;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s;
+  width: 100%;
+  max-width: 100% !important;
+
+  &:hover {
+    border-color: #888;
+  }
+}
+
+.gpts-search-container button {
+  margin-left: 5px;
+}
+
+.gpts-load-more-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  width: 100%;
+}
+
+.gpts-load-more-button {
+  cursor: pointer;
+  display: block;
+  border: 1px solid var(--border-in-light);
+  border-radius: 5px;
+  padding: 5px 10px;
+  &:hover {
+    background-color: var(--hover-color);
+  }
+}
+
 

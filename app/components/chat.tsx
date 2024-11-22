@@ -79,7 +79,6 @@ import {
   showPlugins,
   safeLocalStorage,
   isImageUrl,
-  uploadToS3,
   isSupportAttachFileModel,
   FillAttachFileTemplate,
 } from "../utils";
@@ -100,6 +99,8 @@ import {
   List,
   ListItem,
   Modal,
+  ModelSelectorWithGPTs,
+  PluginsSelector,
   Selector,
   showConfirm,
   showPrompt,
@@ -115,12 +116,13 @@ import {
   UNFINISHED_INPUT,
   ServiceProvider,
   modelHasSubTitle,
-  MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
   MAX_ATTACH_FILE_COUNT,
+  CHATGPT_GPTS_DATA_URL,
+  CHATGPT_GPTS_LIST_URL,
 } from "../constant";
 import { Avatar } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
-import { useMaskStore } from "../store/mask";
+import { DEFAULT_MASK_AVATAR, useMaskStore } from "../store/mask";
 import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
 import { prettyObject } from "../utils/format";
 import { ExportMessageModal } from "./exporter";
@@ -142,6 +144,7 @@ import { AttachPanel } from "./AttachPanel";
 import Image from "next/image";
 import { AttachFile } from "../types/attach";
 import { getAttachHistory } from "../utils/attach";
+import { Gizmo } from "../types/gizmo";
 
 const localStorage = safeLocalStorage();
 
@@ -548,6 +551,8 @@ export function ChatActions(props: {
   uploading: boolean;
   setShowShortcutKeyModal: React.Dispatch<React.SetStateAction<boolean>>;
   setUserInput: (input: string) => void;
+  gizmos: Gizmo[];
+  setGizmos: React.Dispatch<React.SetStateAction<Gizmo[]>>;
 }) {
   const config = useAppConfig();
   const navigate = useNavigate();
@@ -567,6 +572,25 @@ export function ChatActions(props: {
   // stop all responses
   const couldStop = ChatControllerPool.hasPending();
   const stopAll = () => ChatControllerPool.stopAll();
+
+  const [isLoadingGpts, setIsLoadingGpts] = useState(false);
+
+  // 在 useEffect 中获取 gpts 数据
+  useEffect(() => {
+    setIsLoadingGpts(true);
+    fetch(CHATGPT_GPTS_DATA_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        props.setGizmos(data.gpts || []);
+        setIsLoadingGpts(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch gpts:", err);
+        setIsLoadingGpts(false);
+      });
+  }, []);
+
+  const [gptsPage, setGptsPage] = useState(0);
 
   // switch model
   const currentModel = chatStore.currentSession().mask.modelConfig.model;
@@ -592,102 +616,29 @@ export function ChatActions(props: {
       return filteredModels;
     }
   }, [allModels]);
+
   const currentModelName = useMemo(() => {
+    // 如果是 gpt-4-gizmo 开头的模型
+    if (currentModel.startsWith("gpt-4-gizmo")) {
+      // 从 gizmos 中查找对应的模型名称
+      const gizmo = props.gizmos.find((g) => g.gid === currentModel);
+      return gizmo?.name ?? currentModel;
+    }
     const model = models.find(
       (m) =>
         m.name == currentModel &&
         m?.provider?.providerName == currentProviderName,
     );
     return model?.displayName ?? "";
-  }, [models, currentModel, currentProviderName]);
+  }, [models, currentModel, currentProviderName, props.gizmos]);
+
   const [showModelSelector, setShowModelSelector] = useState(false);
   const [showPluginSelector, setShowPluginSelector] = useState(false);
   const [showUploadImage, setShowUploadImage] = useState(false);
 
   const [showUploadFile, setShowUploadFile] = useState(false);
 
-  function uploadAttachFile(
-    attachFileUrls: string[],
-    setAttachFileUrls: (fileUrls: string[]) => void,
-    attachFileNames: string[],
-    setAttachFileNames: (fileNames: string[]) => void,
-    setFileUploading: (fileUploading: boolean) => void,
-  ): void {
-    (async () => {
-      // 上传文件的Urls数组
-      const fileUrls: string[] = [];
-      fileUrls.push(...attachFileUrls);
-
-      const fileNames: string[] = [];
-      fileNames.push(...attachFileNames);
-
-      fileUrls.push(
-        ...(await new Promise<string[]>((res, rej) => {
-          const fileInput = document.createElement("input");
-          fileInput.type = "file";
-          let fileAccept =
-            "image/png, image/jpeg, image/webp, image/heic, image/heif";
-          // 增加支持txt,PDF,word,excel,ppt等文件
-          fileAccept +=
-            ", application/pdf, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain";
-          // 增加支持xlsx,docx,pptx等文件
-          fileAccept +=
-            ", application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation";
-          fileInput.accept = fileAccept;
-          fileInput.multiple = true;
-          fileInput.onchange = (event: any) => {
-            setFileUploading(true);
-
-            const files = event.target.files;
-            const awsUrls: string[] = [];
-            for (let i = 0; i < files.length; i++) {
-              const file = event.target.files[i];
-
-              uploadToS3({
-                uploadFile: file,
-                onProgress: (progress) => {
-                  console.log("uploading...", progress);
-                },
-                onSuccess: (url) => {
-                  setFileUploading(false);
-                  awsUrls.push(url.custom_url);
-                  fileNames.push(file.name);
-                  if (
-                    awsUrls.length === MAX_UPLOAD_GPT4PLUS_FILE_LENGTH ||
-                    awsUrls.length === files.length
-                  ) {
-                    res(awsUrls);
-                  }
-                },
-                onError: (error) => {
-                  setFileUploading(false);
-                  rej(error);
-                },
-              });
-            }
-          };
-          fileInput.click();
-        })),
-      );
-
-      const filesLength = fileUrls.length;
-      // 限定最多上传3个文件
-      if (filesLength > MAX_UPLOAD_GPT4PLUS_FILE_LENGTH) {
-        fileUrls.splice(
-          MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
-          filesLength - MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
-        );
-      }
-      if (fileNames.length > MAX_UPLOAD_GPT4PLUS_FILE_LENGTH) {
-        fileNames.splice(
-          MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
-          filesLength - MAX_UPLOAD_GPT4PLUS_FILE_LENGTH,
-        );
-      }
-      setAttachFileUrls(fileUrls);
-      setAttachFileNames(fileNames);
-    })();
-  }
+  const maskStore = useMaskStore();
 
   const [showSizeSelector, setShowSizeSelector] = useState(false);
   const [showQualitySelector, setShowQualitySelector] = useState(false);
@@ -722,7 +673,9 @@ export function ChatActions(props: {
 
     // if current model is not available
     // switch to first available model
-    const isUnavailableModel = !models.some((m) => m.name === currentModel);
+    const isUnavailableModel =
+      !models.some((m) => m.name === currentModel) &&
+      !currentModel.startsWith("gpt-4-gizmo"); // 添加对gizmo模型的判断;
     if (isUnavailableModel && models.length > 0) {
       // show next model to default model if exist
       let nextModel = models.find((model) => model.isDefault) || models[0];
@@ -815,24 +768,30 @@ export function ChatActions(props: {
       />
 
       {showModelSelector && (
-        <Selector
+        <ModelSelectorWithGPTs
           defaultSelectedValue={`${currentModel}@${currentProviderName}`}
           items={models.map((m) => ({
             title: `${m.displayName}`,
             subTitle: modelHasSubTitle.hasOwnProperty(m.name)
               ? modelHasSubTitle[m.name]?.subTitle
               : "",
+            isVision: isVisionModel(m.name),
             value: `${m.name}@${m?.provider?.providerName}`,
           }))}
           onClose={() => setShowModelSelector(false)}
           onSelection={(s) => {
             if (s.length === 0) return;
-            const [model, providerName] = s[0].split("@");
+            const [model, providerName] = s.split("@");
             chatStore.updateCurrentSession((session) => {
               session.mask.modelConfig.model = model as ModelType;
               session.mask.modelConfig.providerName =
                 providerName as ServiceProvider;
               session.mask.syncGlobalConfig = false;
+              if (model.startsWith("gpt-4-gizmo")) {
+                const selectedGizmo = props.gizmos.find((g) => g.gid === model);
+                session.mask.avatar =
+                  selectedGizmo?.logo ?? DEFAULT_MASK_AVATAR;
+              }
             });
             if (providerName == "ByteDance") {
               const selectedModel = models.find(
@@ -841,9 +800,33 @@ export function ChatActions(props: {
               );
               showToast(selectedModel?.displayName ?? "");
             } else {
-              showToast(model);
+              if (model.startsWith("gpt-4-gizmo")) {
+                const selectedGizmo = props.gizmos.find((g) => g.gid === model);
+                showToast(selectedGizmo?.name ?? model);
+              } else {
+                showToast(model);
+              }
             }
           }}
+          onLoadMore={() => {
+            setIsLoadingGpts(true);
+            setGptsPage(gptsPage + 1);
+            // 在原有gizmos基础上，添加新数据
+            fetch(`${CHATGPT_GPTS_LIST_URL}/${gptsPage}`)
+              .then((res) => res.json())
+              .then((data) => {
+                props.setGizmos([...props.gizmos, ...data.data?.list]);
+                setIsLoadingGpts(false);
+              })
+              .catch((err) => {
+                console.error("Failed to fetch gpts:", err);
+                setIsLoadingGpts(false);
+              });
+          }}
+          gizmos={props.gizmos}
+          setGizmos={props.setGizmos}
+          isLoadingGpts={isLoadingGpts}
+          setIsLoadingGpts={setIsLoadingGpts}
         />
       )}
 
@@ -942,15 +925,16 @@ export function ChatActions(props: {
         />
       )}
       {showPluginSelector && (
-        <Selector
+        <PluginsSelector
           multiple
           defaultSelectedValue={chatStore.currentSession().mask?.plugin}
           items={pluginStore.getAll().map((item) => ({
             title: `${item?.title}@${item?.version}`,
             value: item?.id,
+            helpLink: (item as any)?.helpLink,
           }))}
           onClose={() => setShowPluginSelector(false)}
-          onSelection={(s) => {
+          onSelection={(s: string[]) => {
             chatStore.updateCurrentSession((session) => {
               session.mask.plugin = s as string[];
             });
@@ -1187,7 +1171,7 @@ function _Chat() {
   const [attachFiles, setAttachFiles] = useState<AttachFile[]>([]);
   const [attachFileNames, setAttachFileNames] = useState<string[]>([]);
   const [fileUploading, setFileUploading] = useState(false);
-
+  const currentModel = session.mask.modelConfig.model;
   const [showAttachPanel, setShowAttachPanel] = useState(false);
 
   useEffect(() => {
@@ -1196,6 +1180,8 @@ function _Chat() {
       .map((file) => file.url);
     setAttachImages(images);
   }, [attachFiles]);
+
+  const [gizmos, setGizmos] = useState<Gizmo[]>([]);
 
   // auto grow input
   const [inputRows, setInputRows] = useState(2);
@@ -1290,7 +1276,7 @@ function _Chat() {
 
     setIsLoading(true);
     chatStore
-      .onUserInput(userInput, attachImages)
+      .onUserInput(userInput, attachImages, gizmos)
       .then(() => setIsLoading(false));
     setAttachImages([]);
     setAttachFiles([]);
@@ -1446,7 +1432,9 @@ function _Chat() {
     setIsLoading(true);
     const textContent = getMessageTextContent(userMessage);
     const images = getMessageImages(userMessage);
-    chatStore.onUserInput(textContent, images).then(() => setIsLoading(false));
+    chatStore
+      .onUserInput(textContent, images, gizmos)
+      .then(() => setIsLoading(false));
     inputRef.current?.focus();
   };
 
@@ -2007,6 +1995,10 @@ function _Chat() {
                               model={
                                 message.model || session.mask.modelConfig.model
                               }
+                              src={
+                                gizmos.find((g) => g.gid === message.model)
+                                  ?.logo
+                              }
                             />
                           )}
                         </>
@@ -2203,10 +2195,12 @@ function _Chat() {
           }}
           setShowShortcutKeyModal={setShowShortcutKeyModal}
           setUserInput={setUserInput}
+          gizmos={gizmos}
+          setGizmos={setGizmos}
         />
         <label
           className={`${styles["chat-input-panel-inner"]} ${
-            attachFiles.length != 0
+            isVisionModel(currentModel)
               ? styles["chat-input-panel-inner-attach"]
               : ""
           } ${
@@ -2221,7 +2215,7 @@ function _Chat() {
           `}
           htmlFor="chat-input"
         >
-          {attachFiles.length != 0 && (
+          {isVisionModel(currentModel) && attachFiles.length != 0 && (
             <div className={styles["attach-file-wrapper"]}>
               {attachFiles.map((attachFile: AttachFile, index) => {
                 let attachClassName = isImageUrl(attachFile.url)
@@ -2327,14 +2321,16 @@ function _Chat() {
             </div>
           )}
 
-          <IconButton
-            icon={<AttachmentUploadIcon />}
-            title={Locale.Chat.Attach}
-            className={styles["chat-input-attach"]}
-            onClick={() => {
-              setShowAttachPanel(true);
-            }}
-          />
+          {isVisionModel(currentModel) && (
+            <IconButton
+              icon={<AttachmentUploadIcon />}
+              title={Locale.Chat.Attach}
+              className={styles["chat-input-attach"]}
+              onClick={() => {
+                setShowAttachPanel(true);
+              }}
+            />
+          )}
           <IconButton
             icon={<SendWhiteIcon />}
             text={Locale.Chat.Send}
@@ -2344,7 +2340,7 @@ function _Chat() {
               doSubmit(userInput);
             }}
           />
-          {showAttachPanel && (
+          {isVisionModel(currentModel) && showAttachPanel && (
             <AttachPanel
               onClose={() => setShowAttachPanel(false)}
               onSelect={(attachFile) => {

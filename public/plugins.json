@@ -2,7 +2,8 @@
   {
     "id": "dalle3",
     "name": "Dalle3",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/dalle/openapi.json"
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/dalle/openapi.json",
+    "helpLink": "https://blog.alz-ai.cn/tags/tips"
   },
   {
     "id": "flux",
@@ -52,6 +53,7 @@
   {
     "id": "chatpdf",
     "name": "Chat PDF GPT",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/chatpdf/openapi.json"
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/chatpdf/openapi.json",
+    "helpLink": "https://blog.alz-ai.cn/blog/%E6%93%8D%E4%BD%9C%E8%AF%B4%E6%98%8E%EF%BC%9APDF%E5%88%86%E6%9E%90%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD"
   }
 ]
