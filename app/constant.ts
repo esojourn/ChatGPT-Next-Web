@@ -750,6 +750,7 @@ export const MAX_UPLOAD_GPT4PLUS_FILE_LENGTH = 3;
 export const MAX_UPLOAD_VISION_IMAGES_LENGTH = 3;
 
 export const MAX_ATTACH_FILE_COUNT = 20;
+export const MAX_ATTACH_FILE_SELECTED = 10;
 
 // GPTs Paths
 export const CHATGPT_GPTS_DATA_URL = "/api/gpts/data";

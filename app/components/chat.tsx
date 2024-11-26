@@ -92,7 +92,7 @@ import { DalleSize, DalleQuality, DalleStyle } from "../typing";
 import { Prompt, usePromptStore } from "../store/prompt";
 import Locale from "../locales";
 
-import { IconButton } from "./button";
+import { IconButton, IconButtonWithBadge } from "./button";
 import styles from "./chat.module.scss";
 
 import {
@@ -119,6 +119,7 @@ import {
   MAX_ATTACH_FILE_COUNT,
   CHATGPT_GPTS_DATA_URL,
   CHATGPT_GPTS_LIST_URL,
+  MAX_ATTACH_FILE_SELECTED,
 } from "../constant";
 import { Avatar } from "./emoji";
 import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
@@ -2215,7 +2216,7 @@ function _Chat() {
           `}
           htmlFor="chat-input"
         >
-          {isVisionModel(currentModel) && attachFiles.length != 0 && (
+          {false && isVisionModel(currentModel) && attachFiles.length != 0 && (
             <div className={styles["attach-file-wrapper"]}>
               {attachFiles.map((attachFile: AttachFile, index) => {
                 let attachClassName = isImageUrl(attachFile.url)
@@ -2322,13 +2323,14 @@ function _Chat() {
           )}
 
           {isVisionModel(currentModel) && (
-            <IconButton
+            <IconButtonWithBadge
               icon={<AttachmentUploadIcon />}
-              title={Locale.Chat.Attach}
+              text={Locale.Chat.Attach}
               className={styles["chat-input-attach"]}
               onClick={() => {
                 setShowAttachPanel(true);
               }}
+              badge={attachFiles.length.toString()}
             />
           )}
           <IconButton
@@ -2356,6 +2358,11 @@ function _Chat() {
                     showToast("附件历史记录已满，请删除一些附件");
                     return;
                   }
+                  // 选择文件的数量限制
+                  if (attachFiles.length >= MAX_ATTACH_FILE_SELECTED) {
+                    showToast("附件选择数量已满，请删除一些附件");
+                    return;
+                  }
                   setAttachFiles((prevFiles) => [
                     ...prevFiles.filter(
                       (file) => file.name !== attachFile.name,
@@ -2364,9 +2371,10 @@ function _Chat() {
                   ]);
                 }
                 // setAttachFiles([...attachFiles, attachFile]);
-                setShowAttachPanel(false);
+                // setShowAttachPanel(false);
               }}
               selectedFiles={attachFiles}
+              setSelectedFiles={setAttachFiles}
             />
           )}
         </label>

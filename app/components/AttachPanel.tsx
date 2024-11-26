@@ -13,6 +13,7 @@ export function AttachPanel(props: {
   onClose: () => void;
   onSelect: (file: AttachFile) => void;
   selectedFiles: AttachFile[];
+  setSelectedFiles: (files: AttachFile[]) => void;
 }) {
   const [history, setHistory] = useState<AttachFile[]>([]);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -117,19 +118,34 @@ export function AttachPanel(props: {
   };
 
   return (
-    <div className={styles["attach-panel"]} ref={panelRef}>
+    <div
+      className={`${styles["attach-panel"]} ${
+        props.selectedFiles.length > 5
+          ? styles["selected-list-2-line"]
+          : styles["selected-list-1-line"]
+      }`}
+      ref={panelRef}
+    >
       <div className={styles["attach-history"]} ref={historyRef}>
         {history.map((file) => {
           const isSelected = props.selectedFiles.some(
             (selectedFile) => selectedFile.id === file.id,
           );
+
+          if (isSelected) {
+            return null;
+          }
+
           return (
             <div
               key={file.id}
               className={`${styles["attach-item"]} ${
                 isSelected ? styles["attach-item-selected"] : ""
               }`}
-              onClick={() => props.onSelect(file)}
+              onClick={(e) => {
+                e.stopPropagation(); // 阻止事件冒泡
+                props.onSelect(file);
+              }}
             >
               {file.type === "image" ? (
                 <img
@@ -163,6 +179,53 @@ export function AttachPanel(props: {
             </div>
           );
         })}
+      </div>
+      <div
+        className={`${styles["attach-selected-list"]}
+        `}
+      >
+        {props.selectedFiles.length === 0 && (
+          <div className={styles["attach-selected-tip"]}>
+            附件可以从历史记录中选择
+            <br />
+            也可以上传新文件
+          </div>
+        )}
+
+        {props.selectedFiles.map((file) => (
+          <div
+            key={file.id}
+            className={`${styles["attach-selected-item"]} ${
+              file.type === "image"
+                ? styles["attach-selected-item-image"]
+                : styles["attach-selected-item-file"]
+            }`}
+          >
+            {file.type === "image" ? (
+              <img
+                src={file.url}
+                alt={file.name}
+                className={styles["attach-preview"]}
+              />
+            ) : (
+              file.name
+            )}
+            <div className={styles["selected-attach-mask"]}>
+              <div
+                className={styles["selected-attach-delete-button"]}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const newSelectedFiles = props.selectedFiles.filter(
+                    (f) => f.id !== file.id,
+                  );
+                  props.setSelectedFiles(newSelectedFiles);
+                }}
+              >
+                <DeleteIcon />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
       <div className={styles["attach-header"]}>
         <div

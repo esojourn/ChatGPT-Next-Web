@@ -605,13 +605,6 @@
   flex-direction: column;
 }
 
-.chat-input-panel-inner-attach {
-  padding-left: 60px;
-  .chat-input {
-    padding-left: 0;
-  }
-}
-
 .chat-input-panel-inner-audio {
   background: var(--bar-color);
   padding-bottom: 60px;
@@ -634,34 +627,31 @@
   resize: none;
   outline: none;
   box-sizing: border-box;
-  min-height: 68px;
+  min-height: 112px;
 }
 
 .chat-input:focus {}
 
 .chat-input-attach {
   position: absolute;
-  left: 10px;
-  bottom: 10px;
+  right: 10px;
+  bottom: 60px;
   cursor: pointer;
   display: flex;
+  width: 70px;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   background-color: var(--white);
   box-shadow: var(--shadow);
-  width: 40px;
-  height: 40px;
   border: var(--border-in-light);
-  .icon-button-text {
-    display: none;
-  }
+  overflow: visible;
+  z-index: 1000;
 }
 
 .chat-input-send {
   background-color: var(--primary);
   color: white;
-
+  width: 70px;
   position: absolute;
   right: 10px;
   bottom: 12px;
@@ -672,8 +662,14 @@
     font-size: 16px;
   }
 
-  .chat-input-send {
-    bottom: 30px;
+  .chat-input-send,
+  .chat-input-attach {
+    bottom: 10px;
+    padding: 10px 12px;
+    width: 75px;
+  }
+  .chat-input-attach {
+    bottom: 60px;
   }
 }
 
@@ -773,7 +769,7 @@
   display: flex;
   flex-wrap: wrap; // 允许换行显示
   width: 100%;
-  padding: 10px 10px 0 0;
+  padding: 10px 10px 0;
 }
 
 .attach-file {
