@@ -17,14 +17,18 @@ export class NotificationSummary extends Component<{ showNotification: any }> {
     let { showNotification } = this.props;
     return (
       <div>
-        <b>2024-11-20最新消息</b>
-        <li>平台功能多处更新。可以通过插件支持PDF分析和联网搜索功能。</li>
+        <b>2024-12-2最新消息</b>
+        <li>
+          近期OpenAI官网降智，导致GPT-4-PLUS识图功能失效。建议用GPT-4o，Claude-3.5-Sonnet替换
+        </li>
+        <li>
+          平台功能多处更新。可以通过插件支持PDF分析和联网搜索功能。建议配合gpt-4o使用
+        </li>
         <li>
           查看新功能
           <a href="https://blog.alz-ai.cn/tags/tips" target="_blank">
             操作说明
           </a>
-          （陆续制作中）。
         </li>
         <li>购买请加微信：alz-ai</li>
         <br />
