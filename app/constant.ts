@@ -493,17 +493,22 @@ export const modelHasSubTitle: {
     displayName: "gpt-4o",
     subTitle: "强大的逻辑推理和情感识别。支持联网。价格是4 turbo的一半",
   },
-  "gpt-4o-web": {
-    displayName: "gpt-4o-web",
-    subTitle: "web逆向渠道",
-  },
-  "gpt-4-turbo": {
-    displayName: "gpt-4-turbo",
-    subTitle: "价格是GPT-4的1/3，知识截止23/12，128K",
-  },
   "gpt-4-plus": {
     displayName: "gpt-4-plus",
     subTitle: "支持文档/图片识别、图片生成、支持联网搜索",
+  },
+  "claude-3-5-sonnet": {
+    displayName: "claude-3-5-sonnet",
+    subTitle:
+      "24年6月发布，中杯3.5sonnet，1/5价格，双倍速度，成绩超过上版大杯opus",
+  },
+  // "gpt-4o-web": {
+  //   displayName: "gpt-4o-web",
+  //   subTitle: "web逆向渠道",
+  // },
+  "gpt-4-turbo": {
+    displayName: "gpt-4-turbo",
+    subTitle: "价格是GPT-4的1/3，知识截止23/12，128K",
   },
   "gpt-4": {
     displayName: "gpt-4",
@@ -517,11 +522,6 @@ export const modelHasSubTitle: {
     displayName: "suno-v3",
     subTitle: "给出曲风、乐器、歌词，AI自动编写音乐",
   },
-  "claude-3-5-sonnet": {
-    displayName: "claude-3-5-sonnet",
-    subTitle:
-      "24年6月发布，中杯3.5sonnet，1/5价格，双倍速度，成绩超过上版大杯opus",
-  },
   "claude-3-opus": {
     displayName: "claude-3-opus",
     subTitle: "大杯Claude 3，文字，情感优于GPT-4",
@@ -534,10 +534,10 @@ export const modelHasSubTitle: {
     displayName: "claude-3-haiku",
     subTitle: "小杯Claude 3，对标GPT 3.5，便宜速度快",
   },
-  "gpt-4-vision-preview": {
-    displayName: "gpt-4-vision-preview",
-    subTitle: "支持“视觉”功能，可识别图片、文档",
-  },
+  // "gpt-4-vision-preview": {
+  //   displayName: "gpt-4-vision-preview",
+  //   subTitle: "支持“视觉”功能，可识别图片、文档",
+  // },
   "o1-preview": {
     displayName: "o1-preview",
     subTitle: "OpenAI 9月份发布模型。思考能力增强。科学、工程、数学领域适用",
@@ -559,14 +559,14 @@ export const modelHasSubTitle: {
     displayName: "bing-Balanced",
     subTitle: "微软必应模型，联网支持好。可搜索信息，可抓取特定页面",
   },
-  SparkDesk: {
-    displayName: "SparkDesk",
-    subTitle: "讯飞星火，24年高考理科成绩国产模型排名第一",
-  },
-  "gemini-pro": {
-    displayName: "gemini-pro",
-    subTitle: "Google AI模型：Gemini Pro",
-  },
+  // SparkDesk: {
+  //   displayName: "SparkDesk",
+  //   subTitle: "讯飞星火，24年高考理科成绩国产模型排名第一",
+  // },
+  // "gemini-pro": {
+  //   displayName: "gemini-pro",
+  //   subTitle: "Google AI模型：Gemini Pro",
+  // },
   "gpt-4-gizmo-g-2fkFE8rbu": {
     displayName: "Test GPTs",
     subTitle: "This is test gpts",
@@ -703,7 +703,7 @@ export const internalAllowedWebDavEndpoints = [
   "https://app.koofr.net/dav/Koofr",
 ];
 
-export const DEFAULT_GA_ID = "G-89WN60ZK2E";
+export const DEFAULT_GA_ID = "G-T07W22H5ZF";
 export const PLUGINS = [
   { name: "Plugins", path: Path.Plugins },
   // { name: "Stable Diffusion", path: Path.Sd },
