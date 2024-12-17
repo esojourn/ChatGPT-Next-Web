@@ -710,8 +710,8 @@ export const PLUGINS = [
   { name: "Search Chat", path: Path.SearchChat },
 ];
 
-export const SAAS_CHAT_URL = "https://nextchat.dev/chat";
-export const SAAS_CHAT_UTM_URL = "https://nextchat.dev/chat?utm=github";
+export const SAAS_CHAT_URL = "https://blog.alz-ai.cn/blog/ChatGPT%E4%B8%AD%E8%BD%AC%E7%AB%99";
+export const SAAS_CHAT_UTM_URL = "https://blog.alz-ai.cn/blog/ChatGPT%E4%B8%AD%E8%BD%AC%E7%AB%99?utm=Chat";
 
 export const API_SERVER_ERROR_CODES: any = {
   close_response_body_failed: "close_response_body_failed",
