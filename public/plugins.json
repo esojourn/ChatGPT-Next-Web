@@ -2,28 +2,28 @@
   {
     "id": "dalle3",
     "name": "Dalle3",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/dalle/openapi.json",
+    "schema": "https://blog.alz-ai.cn/plugins/dalle.json",
     "helpLink": "https://blog.alz-ai.cn/tags/tips"
   },
   {
     "id": "flux",
     "name": "Flux",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/flux/openapi.json"
+    "schema": "https://blog.alz-ai.cn/plugins/flux.json"
   },
   {
     "id": "wolframalpha",
     "name": "WolframAlpha",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/wolframalpha/openapi.json"
+    "schema": "https://blog.alz-ai.cn/plugins/wolframalpha.json"
   },
   {
     "id": "arxivsearch",
     "name": "ArxivSearch",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/arxivsearch/openapi.json"
+    "schema": "https://blog.alz-ai.cn/plugins/arxivsearch.json"
   },
   {
     "id": "duckduckgolite",
     "name": "DuckDuckGoLiteSearch",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/duckduckgolite/openapi.json"
+    "schema": "https://blog.alz-ai.cn/plugins/duckduckgolite.json"
   },
   {
     "id": "gapier",
@@ -38,22 +38,22 @@
   {
     "id": "fastgpt",
     "name": "FastGPT",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/fastgpt/openapi.json"
+    "schema": "https://blog.alz-ai.cn/plugins/fastgpt.json"
   },
   {
     "id": "npmsearch",
     "name": "NPM Registry Search API",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/npmsearch/openapi.json"
+    "schema": "https://blog.alz-ai.cn/plugins/npmsearch.json"
   },
   {
     "id": "codeinterpreterapi",
     "name": "CodeInterpreter",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/codeinterpreterapi/openapi.json"
+    "schema": "https://blog.alz-ai.cn/plugins/codeinterpreterapi.json"
   },
   {
     "id": "chatpdf",
     "name": "Chat PDF GPT",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/chatpdf/openapi.json",
+    "schema": "https://blog.alz-ai.cn/plugins/chatpdf.json",
     "helpLink": "https://blog.alz-ai.cn/blog/%E6%93%8D%E4%BD%9C%E8%AF%B4%E6%98%8E%EF%BC%9APDF%E5%88%86%E6%9E%90%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD"
   }
 ]
