@@ -126,24 +126,20 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-title"]}>GPT for Free</div>
         <div className={styles["sidebar-sub-title"]}>
           <p>
-            23年末，迫于捐助不足，建立了付费站点。
-            无心插柳，却在一年多的积累后，获得了一批稳定的用户支持。
-            获得的收入重新投入到免费站的运营上。目前免费站可以比较稳定的持续服务了。
-            感谢用户的支持认可！💕💕💕
+            免费站始建于2023年初，依赖于付费站点持续运营。付费站点提供更多模型支持，更快的响应速度。
           </p>
           <p>
             免费站密码更新，请加微信“alz-ai”获取。
             <br />
           </p>
+          付费站近期更新：
+          <br />
+          <li>25/02/19:DeepSeek-R1增加思考过程显示</li>
+          <li>25/02/10:增加DeepSeek资源，使用满血版-671B全尺寸模型</li>
           <li>
-            免费站支持gpt-4o-mini模型，人太多时，会暂停几小时，可以稍后再来。
+            25/02/01：新增模型DeepSeek-r1 - 深度思考, DeepSeek-v3 -
+            中文能力优秀。产品官方APP可免费使用，本站API中转价格与官方相当。
           </li>
-          <li>
-            付费站支持众多最先进的模型，包括：GPT-4-plus / Claude 3 Opus / 3.5
-            Sonnet等
-          </li>
-          <li>付费站支持联网 / 链接搜索引擎 / 文档识别等高级功能。</li>
-          <li>付费站支持suno-v3模型支持。根据文字描述生成音乐。</li>
           <p>付费站价格15元起，请微信联系alz-ai。</p>
           <a
             href="#"
@@ -161,8 +157,34 @@ export function SideBar(props: { className?: string }) {
                     按照实际用量计费。15元起。
                     <br />
                     付费用户扣费倍率下调。目前费率相当于官方的84%。
+                    <li>
+                      付费站近期更新：
+                      <br />
+                      25/02/19：DeepSeek-R1增加思考过程显示
+                      <br />
+                      25/02/10：增加DeepSeek资源，使用满血版-671B全尺寸模型
+                      <br />
+                      25/02/01：新增模型DeepSeek-r1 - 深度思考, DeepSeek-v3 -
+                      中文能力优秀。产品官方APP可免费使用，本站API中转价格与官方相当。
+                      <br />
+                      25/01/08：新增模型openai o1, google gemini-2.0-flash-exp
+                      <br />
+                      24/11/20：平台功能多处更新。可以通过插件支持PDF分析和联网搜索功能。
+                      <br />
+                      24/09/13：第一时间开通o1-preview，o1-mini OpenAI
+                      9月份发布模型。思考能力增强。科学、工程、数学领域适用
+                      <br />
+                      24/06/21：第一时间开启claude 3.5
+                      sonnet支持。1/5价格，双倍速度，成绩超过上版大杯opus。
+                      <br />
+                      24/05/14：第一时间开启gpt-4o支持，逻辑推理和情感识别强大，价格只有gpt-4-turbo的一半。
+                      <br />
+                      24/04/25：claude-3-opus价格下调40%。
+                    </li>
                     <h2>付费站支持模型</h2>
                     <ul>
+                      <li>Deepseek-r1, v3，满血版671B全尺寸模型</li>
+                      <li>Claude-3.5-sonnet，擅长编程开发，语言表达自然</li>
                       <li>
                         gpt-4-plus：支持文档/图片识别、Dall-E3图片生成、支持联网搜索（用英文搜索效果更好，注意额度消耗）。
                       </li>
