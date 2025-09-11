@@ -131,14 +131,17 @@ export function SideBar(props: { className?: string }) {
           <p>
             免费站密码更新，请加微信“alz-ai”获取。
             <br />
+            免费站新增GPT-5-mini模型
           </p>
           付费站近期更新：
           <br />
-          <li>25/02/19:DeepSeek-R1增加思考过程显示</li>
-          <li>25/02/10:增加DeepSeek资源，使用满血版-671B全尺寸模型</li>
+          <li>25/08/12: grok模型上线。Musk家 x AI系列。期待效果反馈。</li>
           <li>
-            25/02/01：新增模型DeepSeek-r1 - 深度思考, DeepSeek-v3 -
-            中文能力优秀。产品官方APP可免费使用，本站API中转价格与官方相当。
+            25/08/11:gpt-5模型上线。价格超低，外网口碑有点崩溃，实际效果待反馈。
+          </li>
+          <li>
+            25/08/06:claude-opus-4-1模型上线。写代码，论文，目前最好用的模型。价格和opus
+            4一样
           </li>
           <p>付费站价格15元起，请微信联系alz-ai。</p>
           <a

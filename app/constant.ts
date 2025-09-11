@@ -65,28 +65,16 @@ Knowledge cutoff: 2021-09
 Current model: {{model}}
 Current time: {{time}}`;
 
-export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
+export const SUMMARIZE_MODEL = "gpt-4o-mini";
 
 export const DEFAULT_MODELS = [
-  {
-    name: "gpt-3.5-turbo",
-    available: true,
-  },
-  {
-    name: "gpt-4o",
-    available: false,
-  },
   {
     name: "gpt-4o-mini",
     available: true,
   },
   {
-    name: "claude-3-opus",
-    available: false,
-  },
-  {
-    name: "claude-3-sonnet",
-    available: false,
+    name: "gpt-5-mini",
+    available: true,
   },
 ] as const;
 
