@@ -1129,10 +1129,13 @@ function _Chat() {
         <div className={styles["donate-wrapper"]}>
           <div className={styles["donate-description"]}>
             <p>
-              免费站获取最新密码：请加微信“alz-ai”私信获取，
+              免费站获取最新密码：请加微信“alz-ai”私信获取。
               <br />
-              付费用户可稳定使用全球主流大模型：包括 / GPT-5 / claude 4.1 opus /
-              Grok 4等。 支持联网 / 文档输入分析 / 出图等。
+              免费站升级模型为：gpt-5-mini。原有用户如有出错，请在“设置”中“重置设置”。
+              <br />
+              付费用户15元起，可稳定使用全球主流大模型：包括 / GPT-5 / claude
+              4.1 opus / Grok 4等。 <br />
+              支持联网 / 文档输入分析 / 出图等。
             </p>
           </div>
         </div>
