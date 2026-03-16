@@ -86,7 +86,7 @@ export const EN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-5-mini",
+      model: "gpt-5-nano",
       temperature: 0.5,
       max_tokens: 2000,
       presence_penalty: 0,

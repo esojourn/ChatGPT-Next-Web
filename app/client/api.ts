@@ -6,7 +6,11 @@ import { ChatGPTApi } from "./platforms/openai";
 export const ROLES = ["system", "user", "assistant"] as const;
 export type MessageRole = (typeof ROLES)[number];
 
-export const Models = ["gpt-5-mini", "gpt-4o-mini"] as const;
+export const Models = [
+  "gpt-5-nano",
+  "gpt-4o-mini",
+  "gemini-3.1-flash-lite-preview",
+] as const;
 export type ChatModel = ModelType;
 
 export interface RequestMessage {

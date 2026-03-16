@@ -73,7 +73,11 @@ export const DEFAULT_MODELS = [
     available: true,
   },
   {
-    name: "gpt-5-mini",
+    name: "gpt-5-nano",
+    available: true,
+  },
+  {
+    name: "gemini-3.1-flash-lite-preview",
     available: true,
   },
 ] as const;
