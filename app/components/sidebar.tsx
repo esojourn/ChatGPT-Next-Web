@@ -131,7 +131,7 @@ export function SideBar(props: { className?: string }) {
           <p>
             免费站密码更新，请加微信“alz-ai”获取。
             <br />
-            免费站新增GPT-5-mini模型
+            26/3/16免费站新增GPT-5-nano，gemini-3.1-flash-lite模型
           </p>
           付费站近期更新：
           <br />
